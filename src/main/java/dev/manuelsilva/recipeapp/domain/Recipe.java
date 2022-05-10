@@ -5,7 +5,6 @@ import java.util.Set;
 
 @Entity
 public class Recipe {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +23,15 @@ public class Recipe {
     private Notes notes;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredients;
+    @ManyToMany
+    @JoinTable(
+            name = "recipe_category",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories;
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -119,5 +126,13 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 }
