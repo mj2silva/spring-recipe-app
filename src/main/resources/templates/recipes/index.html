@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, 'recipes')}">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipes home</title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center my-2">Recipes list</h2>
+        <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Prep time</th>
+                    <th>Cook time</th>
+                    <th>Notes</th>
+                    <th>Instructions</th>
+                    <th>Difficulty</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="recipe: ${recipes}">
+                    <td th:text="${recipe.id}"></td>
+                    <td th:text="${recipe.description}"></td>
+                    <td style="min-width: 7rem" th:text="${recipe.prepTime}"></td>
+                    <td style="min-width: 7rem" th:text="${recipe.cookTime}"></td>
+                    <td style="min-width: 15rem" th:text="${recipe.notes.recipeNotes}"></td>
+                    <td style="white-space: pre-line; min-width: 15rem" th:text="${recipe.directions}"></td>
+                    <td th:text="${recipe.difficulty}"></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</body>
+</html>
