@@ -16,6 +16,14 @@ public class Ingredient {
     @ManyToOne
     private Recipe recipe;
 
+    public Ingredient(String description, Float amount, UnitOfMeasure uom) {
+        this.description = description;
+        this.amount = BigDecimal.valueOf(amount);
+        this.uom = uom;
+    }
+
+    public Ingredient() {
+    }
 
     public Long getId() {
         return id;

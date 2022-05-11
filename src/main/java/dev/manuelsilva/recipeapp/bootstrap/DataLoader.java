@@ -59,15 +59,15 @@ public class DataLoader implements CommandLineRunner {
             Category mexican,
             Category fastFood
     ) {
+        Recipe perfectGuacamole = new Recipe();
+
         Notes guacamoleNotes = new Notes();
         guacamoleNotes.setRecipeNotes(
                 "Be careful handling chilis! If using, it's best to wear food-safe gloves. " +
                 "If no gloves are available, wash your hands thoroughly after handling, and " +
                 "do not touch your eyes or the area near your eyes for several hours afterwards."
         );
-
-        Recipe perfectGuacamole = new Recipe();
-
+        perfectGuacamole.setNotes(guacamoleNotes);
         perfectGuacamole.setDescription("The Best Guacamole");
         perfectGuacamole.setPrepTime(10);
         perfectGuacamole.setCookTime(0);
@@ -83,19 +83,17 @@ public class DataLoader implements CommandLineRunner {
                 """
         );
         perfectGuacamole.setDifficulty(Difficulty.EASY);
-        perfectGuacamole.setNotes(guacamoleNotes);
-        guacamoleNotes.setRecipe(perfectGuacamole);
-        addIngredientToRecipe("avocado", ripe,2F, perfectGuacamole);
-        addIngredientToRecipe("kosher salt", teaspoon,0.25F, perfectGuacamole);
-        addIngredientToRecipe("lemon juice", tablespoon,1F, perfectGuacamole);
-        addIngredientToRecipe("chilis", pieces,4F, perfectGuacamole);
-        addIngredientToRecipe("cilantro", tablespoon,2F, perfectGuacamole);
-        addIngredientToRecipe("black pepper", pinch,1F, perfectGuacamole);
-        addIngredientToRecipe("tomato", ripe,0.5F, perfectGuacamole);
-        addIngredientToRecipe("red radish", slices,4F, perfectGuacamole);
-        addIngredientToRecipe("tortilla", pieces,4F, perfectGuacamole);
-        perfectGuacamole.getCategories().add(mexican);
-        perfectGuacamole.getCategories().add(fastFood);
+        perfectGuacamole.addIngredient(new Ingredient("avocado",2F, ripe));
+        perfectGuacamole.addIngredient(new Ingredient("kosher salt",0.25F, teaspoon));
+        perfectGuacamole.addIngredient(new Ingredient("lemon juice",1F, tablespoon));
+        perfectGuacamole.addIngredient(new Ingredient("chilis",4F, pieces));
+        perfectGuacamole.addIngredient(new Ingredient("cilantro",2F, tablespoon));
+        perfectGuacamole.addIngredient(new Ingredient("black pepper",1F, pinch));
+        perfectGuacamole.addIngredient(new Ingredient("tomato",0.5F, ripe));
+        perfectGuacamole.addIngredient(new Ingredient("red radish",4F, slices));
+        perfectGuacamole.addIngredient(new Ingredient("tortilla",4F, pieces));
+        perfectGuacamole.addCategory(mexican);
+        perfectGuacamole.addCategory(fastFood);
 
         recipeRepository.save(perfectGuacamole);
     }
@@ -110,6 +108,8 @@ public class DataLoader implements CommandLineRunner {
             Category fastFood,
             Category american
     ) {
+        Recipe chickenTacos = new Recipe();
+
         Notes chickenTacosNotes = new Notes();
         chickenTacosNotes.setRecipeNotes(
                 "Look for ancho chile powder with the Mexican ingredients at your grocery store, " +
@@ -117,9 +117,7 @@ public class DataLoader implements CommandLineRunner {
                 "the oregano, and the cumin with 2 1/2 tablespoons regular chili powder, though the " +
                 "flavor won't be quite the same.)"
         );
-
-        Recipe chickenTacos = new Recipe();
-
+        chickenTacos.setNotes(chickenTacosNotes);
         chickenTacos.setDescription("Spicy Grilled Chicken Tacos");
         chickenTacos.setPrepTime(20);
         chickenTacos.setCookTime(15);
@@ -136,31 +134,23 @@ public class DataLoader implements CommandLineRunner {
                 """
         );
         chickenTacos.setDifficulty(Difficulty.MODERATE);
-        // First the ingredients...
-        addIngredientToRecipe("chili pepper", tablespoon,2F, chickenTacos);
-        addIngredientToRecipe("oregano", teaspoon,1F, chickenTacos);
-        addIngredientToRecipe("cumin", teaspoon,1F, chickenTacos);
-        addIngredientToRecipe("sugar", teaspoon,4F, chickenTacos);
-        addIngredientToRecipe("salt", teaspoon,2F, chickenTacos);
-        addIngredientToRecipe("garlic", pieces,1F, chickenTacos);
-        addIngredientToRecipe("zest", tablespoon,0.5F, chickenTacos);
-        addIngredientToRecipe("orange juice", tablespoon,4F, chickenTacos);
-        addIngredientToRecipe("olive oil", tablespoon,4F, chickenTacos);
-        addIngredientToRecipe("chicken thighs", pounds,4F, chickenTacos);
-        addIngredientToRecipe("corn tortillas", pieces,8F, chickenTacos);
-        addIngredientToRecipe("avocado", ripe,2F, chickenTacos);
-        chickenTacos.setNotes(chickenTacosNotes);
-        chickenTacosNotes.setRecipe(chickenTacos);
-        chickenTacos.getCategories().add(mexican);
-        chickenTacos.getCategories().add(fastFood);
-        chickenTacos.getCategories().add(american);
+        chickenTacos.addIngredient(new Ingredient("chili pepper",2F, tablespoon));
+        chickenTacos.addIngredient(new Ingredient("oregano",1F, teaspoon));
+        chickenTacos.addIngredient(new Ingredient("cumin",1F, teaspoon));
+        chickenTacos.addIngredient(new Ingredient("sugar",4F, teaspoon));
+        chickenTacos.addIngredient(new Ingredient("salt",2F, teaspoon));
+        chickenTacos.addIngredient(new Ingredient("garlic",1F, pieces));
+        chickenTacos.addIngredient(new Ingredient("zest", 5F ,tablespoon));
+        chickenTacos.addIngredient(new Ingredient("orange juice",4F, tablespoon));
+        chickenTacos.addIngredient(new Ingredient("olive oil",4F, tablespoon));
+        chickenTacos.addIngredient(new Ingredient("chicken thighs",4F, pounds));
+        chickenTacos.addIngredient(new Ingredient("corn tortillas",8F, pieces));
+        chickenTacos.addIngredient(new Ingredient("avocado",2F, ripe));
+        chickenTacos.addCategory(mexican);
+        chickenTacos.addCategory(fastFood);
+        chickenTacos.addCategory(american);
 
         recipeRepository.save(chickenTacos);
-    }
-
-    private void addIngredientToRecipe(String ingredientName, UnitOfMeasure unitOfMeasure, Float amount, Recipe recipe) {
-        Ingredient ingredient = createIngredient(ingredientName, unitOfMeasure, amount, recipe);
-        recipe.getIngredients().add(ingredient);
     }
 
     private UnitOfMeasure getUnitOfMeasureOrCreateIfNotExists(String uom) {
@@ -181,14 +171,5 @@ public class DataLoader implements CommandLineRunner {
         Category category = new Category();
         category.setDescription(categoryName);
         return categoryRepository.save(category);
-    }
-
-    private Ingredient createIngredient(String name, UnitOfMeasure uom, Float amount, Recipe recipe) {
-        Ingredient ingredient = new Ingredient();
-        ingredient.setDescription(name);
-        ingredient.setUom(uom);
-        ingredient.setAmount(BigDecimal.valueOf(amount));
-        ingredient.setRecipe(recipe);
-        return ingredient;
     }
 }

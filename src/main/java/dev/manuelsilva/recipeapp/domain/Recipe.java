@@ -125,6 +125,7 @@ public class Recipe {
     }
 
     public void setNotes(Notes notes) {
+        notes.setRecipe(this);
         this.notes = notes;
     }
 
@@ -133,5 +134,18 @@ public class Recipe {
             categories = new HashSet<>();
         }
         return categories;
+    }
+
+    public Set<Ingredient> addIngredient(Ingredient ingredient) {
+        if (this.ingredients == null) this.ingredients = new HashSet<>();
+        this.ingredients.add(ingredient);
+        ingredient.setRecipe(this);
+        return this.ingredients;
+    }
+
+    public Set<Category> addCategory(Category category) {
+        if (this.categories == null) this.categories = new HashSet<>();
+        this.categories.add(category);
+        return this.categories;
     }
 }
