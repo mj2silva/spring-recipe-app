@@ -4,13 +4,15 @@ import dev.manuelsilva.recipeapp.domain.*;
 import dev.manuelsilva.recipeapp.repositories.CategoryRepository;
 import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
 import dev.manuelsilva.recipeapp.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class DataLoader implements CommandLineRunner {
     private final RecipeRepository recipeRepository;
     private final CategoryRepository categoryRepository;
@@ -23,12 +25,16 @@ public class DataLoader implements CommandLineRunner {
     }
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
+        log.info("Starting to load data");
         loadData();
+        log.info("Finish loading data");
     }
 
     private void loadData() {
         // If there are not already in the database, units of measure are created
+        log.info("Creating units of measure");
         UnitOfMeasure ripe = getUnitOfMeasureOrCreateIfNotExists("Ripe");
         UnitOfMeasure teaspoon = getUnitOfMeasureOrCreateIfNotExists("Teaspoon");
         UnitOfMeasure tablespoon = getUnitOfMeasureOrCreateIfNotExists("Tablespoon");
@@ -38,10 +44,12 @@ public class DataLoader implements CommandLineRunner {
         UnitOfMeasure pounds = getUnitOfMeasureOrCreateIfNotExists("Pounds");
 
         // Retrieving categories
+        log.info("Creating categories");
         Category mexican = getCategoryOrCreateIfNotExists("Mexican");
         Category fastFood = getCategoryOrCreateIfNotExists("Fast food");
         Category american = getCategoryOrCreateIfNotExists("American");
 
+        log.info("Creating recipes");
         // Starting to create the Perfect Guacamole
         createPerfectGuacamoleRecipe(ripe, teaspoon, tablespoon, pieces, pinch, slices, mexican, fastFood);
 
