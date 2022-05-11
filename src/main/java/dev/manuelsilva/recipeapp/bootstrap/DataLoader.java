@@ -31,18 +31,18 @@ public class DataLoader implements CommandLineRunner {
 
     private void loadData() {
         // If there are not already in the database, units of measure are created
-        UnitOfMeasure ripe = getUnitOfMeasureOrCreateIfNotExists("ripe");
-        UnitOfMeasure teaspoon = getUnitOfMeasureOrCreateIfNotExists("teaspoon");
-        UnitOfMeasure tablespoon = getUnitOfMeasureOrCreateIfNotExists("tablespoon");
-        UnitOfMeasure pieces = getUnitOfMeasureOrCreateIfNotExists("pieces");
-        UnitOfMeasure pinch = getUnitOfMeasureOrCreateIfNotExists("pinch");
-        UnitOfMeasure slices = getUnitOfMeasureOrCreateIfNotExists("slices");
-        UnitOfMeasure pounds = getUnitOfMeasureOrCreateIfNotExists("pounds");
+        UnitOfMeasure ripe = getUnitOfMeasureOrCreateIfNotExists("Ripe");
+        UnitOfMeasure teaspoon = getUnitOfMeasureOrCreateIfNotExists("Teaspoon");
+        UnitOfMeasure tablespoon = getUnitOfMeasureOrCreateIfNotExists("Tablespoon");
+        UnitOfMeasure pieces = getUnitOfMeasureOrCreateIfNotExists("Piece");
+        UnitOfMeasure pinch = getUnitOfMeasureOrCreateIfNotExists("Pinch");
+        UnitOfMeasure slices = getUnitOfMeasureOrCreateIfNotExists("Slices");
+        UnitOfMeasure pounds = getUnitOfMeasureOrCreateIfNotExists("Pounds");
 
         // Retrieving categories
-        Category mexican = getCategoryOrCreateIfNotExists("mexican");
-        Category fastFood = getCategoryOrCreateIfNotExists("fast food");
-        Category american = getCategoryOrCreateIfNotExists("american");
+        Category mexican = getCategoryOrCreateIfNotExists("Mexican");
+        Category fastFood = getCategoryOrCreateIfNotExists("Fast food");
+        Category american = getCategoryOrCreateIfNotExists("American");
 
         // Starting to create the Perfect Guacamole
         createPerfectGuacamoleRecipe(ripe, teaspoon, tablespoon, pieces, pinch, slices, mexican, fastFood);
@@ -86,6 +86,7 @@ public class DataLoader implements CommandLineRunner {
         );
         perfectGuacamole.setDifficulty(Difficulty.EASY);
         perfectGuacamole.setNotes(guacamoleNotes);
+        guacamoleNotes.setRecipe(perfectGuacamole);
         addIngredientToRecipe("avocado", ripe,2F, perfectGuacamole);
         addIngredientToRecipe("kosher salt", teaspoon,0.25F, perfectGuacamole);
         addIngredientToRecipe("lemon juice", tablespoon,1F, perfectGuacamole);
@@ -151,6 +152,7 @@ public class DataLoader implements CommandLineRunner {
         addIngredientToRecipe("corn tortillas", pieces,8F, chickenTacos);
         addIngredientToRecipe("avocado", ripe,2F, chickenTacos);
         chickenTacos.setNotes(chickenTacosNotes);
+        chickenTacosNotes.setRecipe(chickenTacos);
         chickenTacos.getCategories().add(mexican);
         chickenTacos.getCategories().add(fastFood);
         chickenTacos.getCategories().add(american);
@@ -159,7 +161,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void addIngredientToRecipe(String ingredientName, UnitOfMeasure unitOfMeasure, Float amount, Recipe recipe) {
-        Ingredient ingredient = createIngredient(ingredientName, unitOfMeasure, amount);
+        Ingredient ingredient = createIngredient(ingredientName, unitOfMeasure, amount, recipe);
         recipe.getIngredients().add(ingredient);
     }
 
@@ -183,11 +185,12 @@ public class DataLoader implements CommandLineRunner {
         return categoryRepository.save(category);
     }
 
-    private Ingredient createIngredient(String name, UnitOfMeasure uom, Float amount) {
+    private Ingredient createIngredient(String name, UnitOfMeasure uom, Float amount, Recipe recipe) {
         Ingredient ingredient = new Ingredient();
         ingredient.setDescription(name);
         ingredient.setUom(uom);
         ingredient.setAmount(BigDecimal.valueOf(amount));
+        ingredient.setRecipe(recipe);
         return ingredient;
     }
 }
