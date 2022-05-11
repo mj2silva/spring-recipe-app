@@ -1,6 +1,6 @@
 package dev.manuelsilva.recipeapp.controllers;
 
-import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
+import dev.manuelsilva.recipeapp.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/recipes")
 public class RecipeController {
-    private final RecipeRepository recipeRepository;
+    private final RecipeService recipeService;
 
-    public RecipeController(RecipeRepository recipeRepository) {
-        this.recipeRepository = recipeRepository;
+    public RecipeController(RecipeService recipeService) {
+        this.recipeService = recipeService;
     }
 
     @RequestMapping({"/", ""})
     public String getRecipes(Model model) {
-        model.addAttribute("recipes", recipeRepository.findAll());
+        model.addAttribute("recipes", recipeService.getAllRecipes());
         return "recipes/index";
     }
 }
