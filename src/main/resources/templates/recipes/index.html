@@ -15,8 +15,8 @@
                     <th>Name</th>
                     <th>Prep time</th>
                     <th>Cook time</th>
-                    <th>Notes</th>
                     <th>Instructions</th>
+                    <th>Notes</th>
                     <th>Difficulty</th>
                 </tr>
             </thead>
@@ -26,8 +26,8 @@
                     <td th:text="${recipe.description}"></td>
                     <td style="min-width: 7rem" th:text="${recipe.prepTime}"></td>
                     <td style="min-width: 7rem" th:text="${recipe.cookTime}"></td>
-                    <td style="min-width: 15rem" th:text="${recipe.notes.recipeNotes}"></td>
                     <td style="white-space: pre-line; min-width: 15rem" th:text="${recipe.directions}"></td>
+                    <td style="min-width: 15rem; max-width: 25rem" th:text="${recipe.notes.recipeNotes}"></td>
                     <td th:text="${recipe.difficulty}"></td>
                 </tr>
             </tbody>
