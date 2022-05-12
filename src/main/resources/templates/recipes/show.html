@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, 'recipes')}">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipes home</title>
+</head>
+<body>
+<div class="container">
+    <div class="card my-2">
+        <div class="card-header">
+            <h1 th:text="${recipe.description}">Recipe title</h1>
+        </div>
+        <div class="card-body">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Ingredients:</h3>
+                    <ul>
+                        <li th:each="ingredient: ${recipe.ingredients}" th:text="${ingredient.description}">Ingredient name</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h3>Instructions:</h3>
+                    <p style="white-space: pre-line" th:text="${recipe.directions}"></p>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h3>Notes:</h3>
+                    <p style="white-space: pre-line" th:text="${recipe.notes.recipeNotes}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

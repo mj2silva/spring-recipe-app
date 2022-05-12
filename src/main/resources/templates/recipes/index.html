@@ -21,7 +21,7 @@
                             <th>Cook time</th>
                             <th>Instructions</th>
                             <th>Notes</th>
-                            <th>Difficulty</th>
+                            <th>Link</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,7 +32,11 @@
                             <td style="min-width: 7rem" th:text="${recipe.cookTime}"></td>
                             <td style="white-space: pre-line; min-width: 15rem" th:text="${recipe.directions}"></td>
                             <td style="min-width: 15rem; max-width: 25rem" th:text="${recipe.notes.recipeNotes}"></td>
-                            <td th:text="${recipe.difficulty}"></td>
+                            <td style="width: 5rem">
+                                <a th:href="@{'/recipes/' + ${recipe.id}}" class="link-info">
+                                    <span class="my-1 mx-1">View</span>
+                                </a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
