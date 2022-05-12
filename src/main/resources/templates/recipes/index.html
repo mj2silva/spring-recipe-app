@@ -6,32 +6,38 @@
 </head>
 <body>
     <div class="container">
-        <h2 class="text-center my-2">Recipes list</h2>
-        <div class="table-responsive">
-        <table class="table table-hover table-striped table-bordered align-middle">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Prep time</th>
-                    <th>Cook time</th>
-                    <th>Instructions</th>
-                    <th>Notes</th>
-                    <th>Difficulty</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="recipe: ${recipes}">
-                    <td th:text="${recipe.id}"></td>
-                    <td th:text="${recipe.description}"></td>
-                    <td style="min-width: 7rem" th:text="${recipe.prepTime}"></td>
-                    <td style="min-width: 7rem" th:text="${recipe.cookTime}"></td>
-                    <td style="white-space: pre-line; min-width: 15rem" th:text="${recipe.directions}"></td>
-                    <td style="min-width: 15rem; max-width: 25rem" th:text="${recipe.notes.recipeNotes}"></td>
-                    <td th:text="${recipe.difficulty}"></td>
-                </tr>
-            </tbody>
-        </table>
+            <div class="card my-2 border-0">
+                <div class="card-header bg-white bg-opacity-50">
+                <h2 class="text-center my-2">Recipes list</h2>
+                </div>
+                <div class="card-body">
+                <div class="table-responsive">
+                <table class="table table-hover table-sub-heading-color align-middle">
+                    <thead>
+                        <tr class="table-dark">
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Prep time</th>
+                            <th>Cook time</th>
+                            <th>Instructions</th>
+                            <th>Notes</th>
+                            <th>Difficulty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="recipe: ${recipes}">
+                            <td th:text="${recipe.id}"></td>
+                            <td th:text="${recipe.description}"></td>
+                            <td style="min-width: 7rem" th:text="${recipe.prepTime}"></td>
+                            <td style="min-width: 7rem" th:text="${recipe.cookTime}"></td>
+                            <td style="white-space: pre-line; min-width: 15rem" th:text="${recipe.directions}"></td>
+                            <td style="min-width: 15rem; max-width: 25rem" th:text="${recipe.notes.recipeNotes}"></td>
+                            <td th:text="${recipe.difficulty}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
         </div>
     </div>
 </body>
