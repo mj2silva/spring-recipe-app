@@ -6,29 +6,76 @@
 </head>
 <body>
 <div class="container">
-    <div class="card my-2">
-        <div class="card-header">
-            <h1 th:text="${recipe.description}">Recipe title</h1>
+    <div class="my-2">
+        <div>
+            <h1>
+                <span th:text="${recipe.description}">Recipe title</span>
+                <span
+                        class="badge bg-primary text-light fs-5"
+                        th:text="${recipe.difficulty}"
+                        th:class="'badge align-middle text-light fs-6 ' + (
+                            (${recipe.difficulty.toString()} == 'EASY')
+                                ? 'bg-success'
+                                : ((${recipe.difficulty.toString()} == 'MODERATE') ? 'bg-warning' : 'bg-danger')
+                        )">
+                    (difficulty)
+                </span>
+            </h1>
+            <span th:each="category: ${recipe.categories}" th:text="${category.description}" class="badge bg-secondary mx-1 mb-3">
+                (categories)
+            </span>
+            <p>
+                <a class="link link-secondary" target="_blank" rel="noreferrer noopener" th:text="${recipe.source}" th:href="${recipe.url}">(source)</a>
+            </p>
         </div>
-        <div class="card-body">
+        <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <h3>Ingredients:</h3>
-                    <ul>
-                        <li th:each="ingredient: ${recipe.ingredients}" th:text="${ingredient.description}">Ingredient name</li>
-                    </ul>
+                    <div class="badge bg-info" title="Prep time">
+                        <span class="fa fa-clock-o"></span>
+                        <span th:text="${recipe.prepTime}">(prep time)</span>
+                        <span>minutes</span>
+                    </div>
+                    <div class="badge bg-light text-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Cook time">
+                        <span class="fa fa-fire"></span>
+                        <span th:text="${recipe.cookTime}">(cook time)</span>
+                        <span>minutes</span>
+                    </div>
                 </div>
             </div>
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h3>Instructions:</h3>
-                    <p style="white-space: pre-line" th:text="${recipe.directions}"></p>
+        </div>
+        <div class="my-3">
+            <div class="row gap-3">
+                <div class="col card">
+                    <div class="card-body">
+                        <h3>Ingredients:</h3>
+                        <div class="badge bg-light text-secondary">
+                            <span class="fa fa-pie-chart mb-1"></span>
+                            <span th:text="${recipe.servings}">(servings)</span>
+                            <span>servings</span>
+                        </div>
+                        <ul>
+                            <li
+                                    th:each="ingredient: ${recipe.ingredients}"
+                                    th:text="${ingredient.amount} + ' ' + ${ingredient.uom.uom} + ' of ' + ${ingredient.description}">
+                                Ingredient name
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col card">
+                    <div class="card-body">
+                        <h3>Instructions:</h3>
+                        <p style="white-space: pre-line" th:text="${recipe.directions}"></p>
+                    </div>
                 </div>
             </div>
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h3>Notes:</h3>
-                    <p style="white-space: pre-line" th:text="${recipe.notes.recipeNotes}"></p>
+            <div class="row mt-3">
+                <div class="col card">
+                    <div class="card-body">
+                        <h3>Notes:</h3>
+                        <p style="white-space: pre-line" th:text="${recipe.notes.recipeNotes}"></p>
+                    </div>
                 </div>
             </div>
         </div>
