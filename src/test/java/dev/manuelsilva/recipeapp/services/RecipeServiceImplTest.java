@@ -1,5 +1,7 @@
 package dev.manuelsilva.recipeapp.services;
 
+import dev.manuelsilva.recipeapp.converters.RecipeCommandToRecipe;
+import dev.manuelsilva.recipeapp.converters.RecipeToRecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,15 +17,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class RecipeServiceImplTest {
+    static final String NEW_DESCRIPTION = "New description";
 
     RecipeServiceImpl recipeService;
     @Mock
     RecipeRepository recipeRepository;
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test

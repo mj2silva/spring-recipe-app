@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Ingredient {
 
     @Id
@@ -23,9 +24,6 @@ public class Ingredient {
         this.description = description;
         this.amount = BigDecimal.valueOf(amount);
         this.uom = uom;
-    }
-
-    public Ingredient() {
     }
 
 }
