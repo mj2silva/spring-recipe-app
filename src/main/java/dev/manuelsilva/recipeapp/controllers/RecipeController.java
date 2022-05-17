@@ -1,5 +1,6 @@
 package dev.manuelsilva.recipeapp.controllers;
 
+import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.services.RecipeService;
 import org.springframework.stereotype.Controller;
@@ -29,5 +30,11 @@ public class RecipeController {
         Recipe recipe = recipeService.getRecipeById(lRecipeId);
         model.addAttribute("recipe", recipe);
         return "recipes/show";
+    }
+
+    @RequestMapping("/new")
+    public String newRecipe(Model model) {
+        model.addAttribute("recipe", new RecipeCommand());
+        return "recipes/form";
     }
 }
