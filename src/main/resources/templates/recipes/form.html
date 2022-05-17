@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="container">
-    <form class="my-3" th:object="${recipe}" th:action="@{/recipe/}">
+    <form class="my-3" th:object="${recipe}" th:action="@{/recipes/}" th:method="post">
         <input type="hidden" th:field="*{id}" />
         <div class="card mb-2">
             <div class="card-header">
@@ -14,17 +14,17 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <label class="col-md-2 col-12">Recipe description</label>
+                    <label class="col-md-2 col-12" for="description">Recipe description</label>
                     <div class="col-12 col-md-10">
-                        <input type="text" class="form-control" th:field="*{description}">
+                        <input type="text" class="form-control" id="description" th:field="*{description}">
                     </div>
                 </div>
                 <fieldset class="row mt-md-2">
                     <legend class="col-form-label col-md-2 col-12">Categories</legend>
                     <div class="col-12 col-md-10 mb-2 mt-md-2">
                         <div class="form-check">
-                            <label class="form-check-label">Cat 1</label>
-                            <input type="checkbox" class="form-check-input" value="Cat 1">
+                            <label class="form-check-label" for="cat-1">Cat 1</label>
+                            <input type="checkbox" class="form-check-input" id="cat-1" value="Cat 1">
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">Cat 2</label>
@@ -38,21 +38,21 @@
                 </fieldset>
                 <div class="row row-cols-md-2 row-cols-lg-3 row-cols-1">
                     <div class="col">
-                        <label>Prep Time:</label>
+                        <label for="prepTime">Prep Time:</label>
                         <div>
-                            <input type="text" class="form-control" th:field="*{description}">
+                            <input type="text" id="prepTime" class="form-control" th:field="*{prepTime}">
                         </div>
                     </div>
                     <div class="col">
-                        <label>Cook Time:</label>
+                        <label for="cookTime">Cook Time:</label>
                         <div>
-                            <input type="text" class="form-control" th:field="*{description}">
+                            <input type="text" id="cookTime" class="form-control" th:field="*{cookTime}">
                         </div>
                     </div>
                     <div class="col">
-                        <label>Difficulty:</label>
+                        <label for="difficulty">Difficulty:</label>
                         <div>
-                            <select class="form-select">
+                            <select id="difficulty" class="form-select">
                                 <option>Easy</option>
                                 <option>Moderate</option>
                                 <option>Difficulty</option>
@@ -60,21 +60,21 @@
                         </div>
                     </div>
                     <div class="col">
-                        <label>Servings:</label>
+                        <label for="servings">Servings:</label>
                         <div>
-                            <input type="text" class="form-control" th:field="*{description}">
+                            <input type="text" class="form-control" id="servings" th:field="*{servings}">
                         </div>
                     </div>
                     <div class="col">
-                        <label>Source:</label>
+                        <label for="source">Source:</label>
                         <div>
-                            <input type="text" class="form-control" th:field="*{description}">
+                            <input type="text" class="form-control" id="source" th:field="*{source}">
                         </div>
                     </div>
                     <div class="col">
-                        <label>Url:</label>
+                        <label for="url">Url:</label>
                         <div>
-                            <input type="text" class="form-control" th:field="*{description}">
+                            <input type="text" class="form-control" id="url" th:field="*{url}">
                         </div>
                     </div>
                 </div>
@@ -98,8 +98,9 @@
                 <h5 class="card-title">Directions</h5>
             </div>
             <div class="card-body">
+                <label class="d-none" for="directions">Directions</label>
                 <div>
-                    <textarea class="form-control" th:field="*{description}"></textarea>
+                    <textarea class="form-control" id="directions" th:field="*{directions}"></textarea>
                 </div>
             </div>
         </div>
@@ -108,11 +109,13 @@
                 <h5 class="card-title">Notes</h5>
             </div>
             <div class="card-body">
+                <label for="notes" class="d-none">Notes</label>
                 <div>
-                    <textarea class="form-control" th:field="*{description}"></textarea>
+                    <textarea id="notes" class="form-control" th:field="*{notesCommand.recipeNotes}"></textarea>
                 </div>
             </div>
         </div>
+        <button type="submit" class="btn btn-dark float-end">Save</button>
     </form>
 </div>
 </body>

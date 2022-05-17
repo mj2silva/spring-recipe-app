@@ -13,8 +13,9 @@
                 <span
                         class="badge bg-primary text-light fs-5"
                         th:text="${recipe.difficulty}"
+                        th:if="(${recipe.difficulty} != null)"
                         th:class="'badge align-middle text-light fs-6 ' + (
-                            (${recipe.difficulty.toString()} == 'EASY')
+                            (${recipe.difficulty && recipe.difficulty.toString()} == 'EASY')
                                 ? 'bg-success'
                                 : ((${recipe.difficulty.toString()} == 'MODERATE') ? 'bg-warning' : 'bg-danger')
                         )">
@@ -74,7 +75,7 @@
                 <div class="col card">
                     <div class="card-body">
                         <h3>Notes:</h3>
-                        <p style="white-space: pre-line" th:text="${recipe.notes.recipeNotes}"></p>
+                        <p style="white-space: pre-line" th:if="(${recipe.notes} != null)" th:text="${recipe.notes.recipeNotes}"></p>
                     </div>
                 </div>
             </div>
