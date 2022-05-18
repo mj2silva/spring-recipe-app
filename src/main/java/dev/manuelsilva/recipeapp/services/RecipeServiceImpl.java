@@ -52,4 +52,9 @@ public class RecipeServiceImpl implements RecipeService {
         Optional<Recipe> detachedRecipe = recipeRepository.findById(id);
         return recipeToRecipeCommand.convert(detachedRecipe.orElse(null));
     }
+
+    @Override
+    public void deleteById(Long id) {
+        recipeRepository.deleteById(id);
+    }
 }

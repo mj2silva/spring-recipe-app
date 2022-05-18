@@ -16,7 +16,7 @@
                             th:text="${recipe.difficulty}"
                             th:if="(${recipe.difficulty} != null)"
                             th:class="'badge align-middle text-light fs-6 ' + (
-                                (${recipe.difficulty} == 'EASY')
+                                (${recipe.difficulty.toString()} == 'EASY')
                                     ? 'bg-success'
                                     : ((${recipe.difficulty.toString()} == 'MODERATE') ? 'bg-warning' : 'bg-danger')
                             )">
@@ -84,6 +84,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+            <a th:href="'/recipes/' + ${recipe.id} + '/delete'" class="link-danger">Delete</a>
         </div>
     </div>
 </div>
