@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, 'recipes')}">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipes home</title>
+</head>
+<body>
+<div class="container">
+    <div class="my-2">
+        <div>
+            <div>
+                <h1>
+                    <a class="text-dark text-decoration-none" th:href="'/recipes/' + ${recipe.id}" th:text="${recipe.description}">Recipe title</a>
+                </h1>
+            </div>
+        </div>
+        <div class="my-3">
+            <div class="row gap-3">
+                <div class="col card">
+                    <div class="card-body">
+                        <h3>Ingredients:</h3>
+                        <div class="badge bg-light text-secondary">
+                            <span class="fa fa-pie-chart mb-1"></span>
+                            <span th:text="${recipe.servings}">(servings)</span>
+                            <span>servings</span>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Amount</th>
+                                    <th>Unit of measure</th>
+                                    <th>View</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ingredient: ${recipe.ingredients}">
+                                    <td th:text="${ingredient.id}">(id)</td>
+                                    <td th:text="${ingredient.description}">(description)</td>
+                                    <td th:text="${ingredient.amount}">(amount)</td>
+                                    <td th:text="${ingredient.unitOfMeasure.uom}">(unit of measure)</td>
+                                    <td><a th:href="'/recipes/' + ${recipe.id} + '/ingredients/' + ${ingredient.id}" th:text="View">(view link)</a></td>
+                                    <td><a class="link-secondary" th:href="'/recipes/' + ${recipe.id} + '/ingredients/' + ${ingredient.id} + '/edit'" th:text="Edit">(edit link)</a></td>
+                                    <td><a class="link-danger" th:href="'/recipes/' + ${recipe.id} + '/ingredients/' + ${ingredient.id} + '/delete'" th:text="Delete">(delete link)</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

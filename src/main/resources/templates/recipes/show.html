@@ -54,7 +54,11 @@
             <div class="row gap-3">
                 <div class="col card">
                     <div class="card-body">
-                        <h3>Ingredients:</h3>
+                        <h3>
+                            <a th:href="'./' + ${recipe.id} + '/ingredients'" class="text-dark text-decoration-none">
+                                Ingredients:
+                            </a>
+                        </h3>
                         <div class="badge bg-light text-secondary">
                             <span class="fa fa-pie-chart mb-1"></span>
                             <span th:text="${recipe.servings}">(servings)</span>
