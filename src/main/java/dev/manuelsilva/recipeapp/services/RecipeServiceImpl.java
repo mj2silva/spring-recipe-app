@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -44,5 +45,11 @@ public class RecipeServiceImpl implements RecipeService {
         if (detachedRecipe == null) return null;
         Recipe savedRecipe = recipeRepository.save(detachedRecipe);
         return recipeToRecipeCommand.convert(savedRecipe);
+    }
+
+    @Override
+    public RecipeCommand getRecipeCommandById(Long id) {
+        Optional<Recipe> detachedRecipe = recipeRepository.findById(id);
+        return recipeToRecipeCommand.convert(detachedRecipe.orElse(null));
     }
 }

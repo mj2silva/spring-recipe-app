@@ -8,20 +8,25 @@
 <div class="container">
     <div class="my-2">
         <div>
-            <h1>
-                <span th:text="${recipe.description}">Recipe title</span>
-                <span
-                        class="badge bg-primary text-light fs-5"
-                        th:text="${recipe.difficulty}"
-                        th:if="(${recipe.difficulty} != null)"
-                        th:class="'badge align-middle text-light fs-6 ' + (
-                            (${recipe.difficulty && recipe.difficulty.toString()} == 'EASY')
-                                ? 'bg-success'
-                                : ((${recipe.difficulty.toString()} == 'MODERATE') ? 'bg-warning' : 'bg-danger')
-                        )">
-                    (difficulty)
-                </span>
-            </h1>
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>
+                    <span th:text="${recipe.description}">Recipe title</span>
+                    <span
+                            class="badge bg-primary text-light fs-5"
+                            th:text="${recipe.difficulty}"
+                            th:if="(${recipe.difficulty} != null)"
+                            th:class="'badge align-middle text-light fs-6 ' + (
+                                (${recipe.difficulty} == 'EASY')
+                                    ? 'bg-success'
+                                    : ((${recipe.difficulty.toString()} == 'MODERATE') ? 'bg-warning' : 'bg-danger')
+                            )">
+                        (difficulty)
+                    </span>
+                </h1>
+            <div>
+                <a th:href="'/recipes/' + ${recipe.id} + '/update'" class="link-info">Edit</a>
+            </div>
+            </div>
             <span th:each="category: ${recipe.categories}" th:text="${category.description}" class="badge bg-secondary mx-1 mb-3">
                 (categories)
             </span>

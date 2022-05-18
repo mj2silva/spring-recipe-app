@@ -86,10 +86,8 @@
                 <button class="btn btn-secondary">Edit</button>
             </div>
             <div class="card-body">
-                <ul>
-                    <li>1 cup of milk</li>
-                    <li>1 teaspoon of chocolate</li>
-                    <li>1 teaspoon of sugar</li>
+                <ul th:each="ingredient: ${recipe.ingredients}">
+                    <li th:text="${ingredient.amount} + ' ' + ${ingredient.unitOfMeasure.uom} + ' ' + ${ingredient.description}">1 cup of milk</li>
                 </ul>
             </div>
         </div>
