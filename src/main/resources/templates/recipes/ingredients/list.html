@@ -18,7 +18,13 @@
             <div class="row gap-3">
                 <div class="col card">
                     <div class="card-body">
-                        <h3>Ingredients:</h3>
+                        <div class="d-flex justify-content-between">
+                            <h3>Ingredients:</h3>
+                            <a th:href="'/recipes/' + ${recipeId} + '/ingredients/new'" class="link-info fs-6">
+                                <span class="fa fa-plus-square"></span>
+                                Create new ingredient
+                            </a>
+                        </div>
                         <div class="badge bg-light text-secondary">
                             <span class="fa fa-pie-chart mb-1"></span>
                             <span th:text="${recipe.servings}">(servings)</span>

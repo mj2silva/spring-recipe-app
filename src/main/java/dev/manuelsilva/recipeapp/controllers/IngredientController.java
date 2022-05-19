@@ -3,6 +3,7 @@ package dev.manuelsilva.recipeapp.controllers;
 import dev.manuelsilva.recipeapp.commands.IngredientCommand;
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.commands.UnitOfMeasureCommand;
+import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.services.IngredientService;
 import dev.manuelsilva.recipeapp.services.RecipeService;
 import dev.manuelsilva.recipeapp.services.UnitOfMeasureService;
@@ -52,6 +53,19 @@ public class IngredientController {
         }
         Set<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
         model.addAttribute("ingredient", ingredient);
+        model.addAttribute("unitsOfMeasure", unitsOfMeasure);
+        return "recipes/ingredients/edit";
+    }
+
+    @RequestMapping("/recipes/{recipeId}/ingredients/new")
+    public String createIngredient(Model model, @PathVariable String recipeId) {
+        Recipe recipe = recipeService.getRecipeById(Long.valueOf(recipeId));
+        if (recipe == null) return "redirect:/recipes";
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(Long.valueOf(recipeId));
+        ingredientCommand.setRecipeDescription(recipe.getDescription());
+        Set<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
+        model.addAttribute("ingredient", ingredientCommand);
         model.addAttribute("unitsOfMeasure", unitsOfMeasure);
         return "recipes/ingredients/edit";
     }

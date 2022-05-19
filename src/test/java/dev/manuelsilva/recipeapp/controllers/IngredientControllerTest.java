@@ -2,6 +2,8 @@ package dev.manuelsilva.recipeapp.controllers;
 
 import dev.manuelsilva.recipeapp.commands.IngredientCommand;
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
+import dev.manuelsilva.recipeapp.domain.Ingredient;
+import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.services.IngredientService;
 import dev.manuelsilva.recipeapp.services.RecipeService;
 import dev.manuelsilva.recipeapp.services.UnitOfMeasureService;
@@ -91,7 +93,16 @@ class IngredientControllerTest {
     }
 
     @Test
-    void testSaveOrUpdate() throws Exception {
+    void testSaveNewIngredientForm() throws Exception {
+        when(unitOfMeasureService.getAllUnitsOfMeasure()).thenReturn(new HashSet<>());
+
+        mockMvc.perform(get("/recipes/2/ingredients/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/ingredients/edit"));
+    }
+
+    @Test
+    void testSaveUpdateIngredient() throws Exception {
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setId(1L);
         ingredientCommand.setRecipeId(2L);
@@ -101,8 +112,26 @@ class IngredientControllerTest {
         mockMvc.perform(
                     post("/recipes/2/ingredients")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("id", "")
+                        .param("id", "1")
                         .param("description", "some description")
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/recipes/2/ingredients/1"));
+    }
+
+    @Test
+    void testSaveNewIngredient() throws Exception {
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setId(1L);
+        ingredientCommand.setRecipeId(2L);
+
+        when(ingredientService.save(any(IngredientCommand.class))).thenReturn(ingredientCommand);
+
+        mockMvc.perform(
+                        post("/recipes/2/ingredients")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .param("id", "")
+                                .param("description", "some description")
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipes/2/ingredients/1"));
