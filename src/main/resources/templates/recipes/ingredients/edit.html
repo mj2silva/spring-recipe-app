@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, 'create-recipe')}">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipes home</title>
+</head>
+<body>
+<div class="container">
+    <form class="my-3" th:object="${ingredient}" th:action="@{/recipes/{recipeId}/ingredients/(recipeId=${recipeId})}" th:method="post">
+        <input type="hidden" th:field="*{id}" />
+        <div class="card mb-2">
+            <div class="card-header">
+                <h5 class="card-title">Edit ingredient information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-md-2 col-12" for="description">Description</label>
+                    <div class="col-12 col-md-10">
+                        <input type="text" class="form-control" id="description" th:field="*{description}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-2 col-12" for="amount">Amount</label>
+                    <div class="col-12 col-md-10">
+                        <input type="number" class="form-control" id="amount" th:field="*{amount}">
+                    </div>
+                </div>
+                <div class="row row-cols-md-2 row-cols-lg-3 row-cols-1">
+                    <div class="col">
+                        <label for="difficulty">Unit of measure:</label>
+                        <div>
+                            <select id="difficulty" class="form-select" th:field="*{unitOfMeasure.id}">
+                                <option
+                                    th:each="uom: ${unitsOfMeasure}"
+                                    th:value="${uom.id}"
+                                    th:text="${uom.uom}"
+                                    th:selected="${uom.equals(ingredient.unitOfMeasure)}"
+                                >
+                                    (UOM)
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-dark float-end">Save</button>
+    </form>
+</div>
+</body>
+</html>

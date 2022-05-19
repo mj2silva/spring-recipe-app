@@ -5,4 +5,5 @@ import dev.manuelsilva.recipeapp.domain.Ingredient;
 
 public interface IngredientService {
     IngredientCommand findById(Long id);
+    IngredientCommand save(IngredientCommand ingredientCommand);
 }
