@@ -70,6 +70,16 @@ public class IngredientController {
         return "recipes/ingredients/edit";
     }
 
+    @RequestMapping("/recipes/{recipeId}/ingredients/{ingredientId}/delete")
+    public String deleteIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
+        IngredientCommand ingredient = ingredientService.findById(Long.valueOf(ingredientId));
+        if (!ingredient.getRecipeId().equals(Long.valueOf(recipeId))) {
+            return String.format("redirect:/recipes/%s/ingredients", recipeId);
+        }
+        ingredientService.deleteById(Long.valueOf(ingredientId));
+        return String.format("redirect:/recipes/%s/ingredients", recipeId);
+    }
+
     @PostMapping("/recipes/{recipeId}/ingredients")
     public String saveOrUpdateIngredient(@ModelAttribute IngredientCommand ingredientCommand) {
         IngredientCommand savedIngredient = ingredientService.save(ingredientCommand);
