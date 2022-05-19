@@ -10,36 +10,45 @@
         <input type="hidden" th:field="*{id}" />
         <div class="card mb-2">
             <div class="card-header">
-                <h5 class="card-title">Edit ingredient information</h5>
+                <h5 class="card-title">
+                    Edit ingredient information
+                    <a th:href="'/recipes/' + ${recipeId} + '/ingredients'" class="link-info fs-6 fw-light">
+                        Back to ingredients
+                    </a>
+                </h5>
             </div>
             <div class="card-body">
-                <div class="row">
+                <div class="row mb-2">
+                    <label class="col-md-2 col-12" for="recipe">Recipe</label>
+                    <div class="col-12 col-md-10">
+                        <input type="text" class="form-control" disabled id="recipe" th:value="${ingredient.recipeDescription}">
+                    </div>
+                </div>
+                <div class="row mb-2">
                     <label class="col-md-2 col-12" for="description">Description</label>
                     <div class="col-12 col-md-10">
                         <input type="text" class="form-control" id="description" th:field="*{description}">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <label class="col-md-2 col-12" for="amount">Amount</label>
                     <div class="col-12 col-md-10">
                         <input type="number" class="form-control" id="amount" th:field="*{amount}">
                     </div>
                 </div>
-                <div class="row row-cols-md-2 row-cols-lg-3 row-cols-1">
-                    <div class="col">
-                        <label for="difficulty">Unit of measure:</label>
-                        <div>
-                            <select id="difficulty" class="form-select" th:field="*{unitOfMeasure.id}">
-                                <option
-                                    th:each="uom: ${unitsOfMeasure}"
-                                    th:value="${uom.id}"
-                                    th:text="${uom.uom}"
-                                    th:selected="${uom.equals(ingredient.unitOfMeasure)}"
-                                >
-                                    (UOM)
-                                </option>
-                            </select>
-                        </div>
+                <div class="row">
+                    <label class="col-md-2 col-12" for="difficulty">Unit of measure:</label>
+                    <div class="col-12 col-md-10">
+                        <select id="difficulty" class="form-select" th:field="*{unitOfMeasure.id}">
+                            <option
+                                th:each="uom: ${unitsOfMeasure}"
+                                th:value="${uom.id}"
+                                th:text="${uom.uom}"
+                                th:selected="${uom.equals(ingredient.unitOfMeasure)}"
+                            >
+                                (UOM)
+                            </option>
+                        </select>
                     </div>
                 </div>
             </div>
