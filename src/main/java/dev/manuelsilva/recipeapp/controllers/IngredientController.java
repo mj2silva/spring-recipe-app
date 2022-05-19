@@ -59,7 +59,7 @@ public class IngredientController {
 
     @RequestMapping("/recipes/{recipeId}/ingredients/new")
     public String createIngredient(Model model, @PathVariable String recipeId) {
-        Recipe recipe = recipeService.getRecipeById(Long.valueOf(recipeId));
+        RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
         if (recipe == null) return "redirect:/recipes";
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(Long.valueOf(recipeId));

@@ -94,6 +94,10 @@ class IngredientControllerTest {
 
     @Test
     void testSaveNewIngredientForm() throws Exception {
+        RecipeCommand recipe = new RecipeCommand();
+        recipe.setId(2L);
+
+        when(recipeService.getRecipeCommandById(eq(2L))).thenReturn(recipe);
         when(unitOfMeasureService.getAllUnitsOfMeasure()).thenReturn(new HashSet<>());
 
         mockMvc.perform(get("/recipes/2/ingredients/new"))
