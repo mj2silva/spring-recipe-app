@@ -31,14 +31,6 @@ public class RecipeController {
         return "recipes/index";
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView notFoundExceptionHandler(Exception exception) {
-        ModelAndView modelAndView = new ModelAndView("errors/404");
-        modelAndView.addObject("error", exception);
-        return modelAndView;
-    }
-
     @GetMapping(value = {"/{recipeId}"})
     public String getRecipe(Model model, @PathVariable String recipeId) {
         RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
@@ -89,5 +81,21 @@ public class RecipeController {
         response.setContentType("image/jpeg");
         InputStream inputStream = new ByteArrayInputStream(bytesFromImage);
         IOUtils.copy(inputStream, response.getOutputStream());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ModelAndView notFoundExceptionHandler(Exception exception) {
+        ModelAndView modelAndView = new ModelAndView("errors/404");
+        modelAndView.addObject("error", exception);
+        return modelAndView;
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ModelAndView wrongIdFormatException(Exception exception) {
+        ModelAndView modelAndView = new ModelAndView("errors/400WrongId");
+        modelAndView.addObject("error", exception);
+        return modelAndView;
     }
 }

@@ -169,4 +169,12 @@ class RecipeControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("errors/404"));
     }
+
+    @Test
+    void testRecipeWithWrongIdFormat() throws Exception {
+        // Notice the given id is not a number long like value, so the route should return a bad request response
+        mockMvc.perform(get("/recipes/wrong-id"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("errors/400WrongId"));
+    }
 }
