@@ -54,4 +54,11 @@ public class RecipeController {
         RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
         return "redirect:/recipes/" + savedCommand.getId();
     }
+
+    @GetMapping("/{recipeId}/change-image")
+    public String changeImage(Model model, @PathVariable String recipeId) {
+        RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
+        model.addAttribute("recipe", recipe);
+        return "recipes/imageForm";
+    }
 }

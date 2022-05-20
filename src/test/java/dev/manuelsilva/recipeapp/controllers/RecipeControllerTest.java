@@ -122,4 +122,18 @@ class RecipeControllerTest {
 
         verify(recipeService, times(1)).deleteById(anyLong());
     }
+
+    @Test
+    void testChangeRecipeImageForm() throws Exception {
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(1L);
+
+        when(recipeService.getRecipeCommandById(eq(1L))).thenReturn(recipeCommand);
+
+        mockMvc.perform(get("/recipes/1/change-image"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("recipe"));
+
+        verify(recipeService, times(1)).getRecipeCommandById(anyLong());
+    }
 }

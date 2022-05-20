@@ -24,4 +24,5 @@ public class RecipeCommand {
     private Difficulty difficulty;
     private NotesCommand notesCommand;
     private Set<CategoryCommand> categories = new HashSet<>();
+    private Byte[] image;
 }

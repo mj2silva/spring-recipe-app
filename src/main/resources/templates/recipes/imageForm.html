@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, 'recipes')}">
+<head>
+  <meta charset="UTF-8">
+  <title>Recipes home</title>
+</head>
+<body>
+<div class="container">
+  <form th:object="${recipe}" th:action="@{/recipes/{recipeId}/image/(recipeId=${recipe.id})}" enctype="multipart/form-data" method="post">
+    <div class="card my-2">
+      <div class="card-header">
+        <h5 class="card-title">Change recipe image</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <label class="col-md-2 col-12" for="file">Image file:</label>
+          <div class="col-12 col-md-10">
+            <input type="file" class="form-control" accept="image/jpeg, image/png" th:field="*{image}" name="file" id="file">
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-dark float-end">Save</button>
+  </form>
+</div>
+</body>
+</html>

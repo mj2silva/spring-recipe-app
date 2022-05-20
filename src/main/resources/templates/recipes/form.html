@@ -84,15 +84,32 @@
                 </div>
             </div>
         </div>
-        <div class="card mb-2">
-            <div class="card-header d-flex justify-content-between align-middle">
-                <h5 class="card-title">Ingredients</h5>
-                <button class="btn btn-secondary">Edit</button>
+        <div class="row">
+            <div class="col">
+                <div class="card mb-2">
+                    <div class="card-header d-flex justify-content-between align-middle">
+                        <h5 class="card-title">Ingredients</h5>
+                        <button class="btn btn-secondary">Edit</button>
+                    </div>
+                    <div class="card-body">
+                        <ul th:each="ingredient: ${recipe.ingredients}">
+                            <li th:text="${ingredient.amount} + ' ' + ${ingredient.unitOfMeasure.uom} + ' ' + ${ingredient.description}">1 cup of milk</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <ul th:each="ingredient: ${recipe.ingredients}">
-                    <li th:text="${ingredient.amount} + ' ' + ${ingredient.unitOfMeasure.uom} + ' ' + ${ingredient.description}">1 cup of milk</li>
-                </ul>
+            <div class="col mb-2">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-middle">
+                        <h5 class="card-title">Image</h5>
+                        <a th:href="@{/recipes/{recipeId}/change-image(recipeId=${recipeId})}" class="btn btn-secondary">Change image</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="w-75 shadow mx-auto h-100 align-items-center d-flex rounded-1 justify-content-center">
+                            <img src="../../static/img/placeholder-image.png" class="w-100 ratio-1x1 img-fluid" th:src="@{/img/placeholder-image.png}" alt="placeholder">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card mb-2">
