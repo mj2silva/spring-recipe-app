@@ -85,12 +85,4 @@ public class IngredientController {
         IngredientCommand savedIngredient = ingredientService.save(ingredientCommand);
         return String.format("redirect:/recipes/%s/ingredients/%s", savedIngredient.getRecipeId(), savedIngredient.getId());
     }
-
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView notFoundExceptionHandler(Exception exception) {
-        ModelAndView modelAndView = new ModelAndView("errors/404");
-        modelAndView.addObject("error", exception);
-        return modelAndView;
-    }
 }
