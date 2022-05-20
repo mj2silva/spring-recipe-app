@@ -52,10 +52,14 @@
                     <div class="col">
                         <label for="difficulty">Difficulty:</label>
                         <div>
-                            <select id="difficulty" class="form-select">
-                                <option>Easy</option>
-                                <option>Moderate</option>
-                                <option>Difficulty</option>
+                            <select id="difficulty" class="form-select" th:field="*{difficulty}">
+                                <option
+                                    th:each="difficultyValue: ${T(dev.manuelsilva.recipeapp.domain.Difficulty).values()}"
+                                    th:value="${difficultyValue.name()}"
+                                    th:text="${difficultyValue.name()}"
+                                >
+                                    (difficulty value)
+                                </option>
                             </select>
                         </div>
                     </div>
