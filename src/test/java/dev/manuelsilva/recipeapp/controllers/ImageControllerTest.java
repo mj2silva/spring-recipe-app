@@ -35,7 +35,7 @@ class ImageControllerTest {
     @Test
     void testHandleImagePost() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile(
-                "file",
+                "image",
                 "testing.txt",
                 "text/plain",
                 "Some random text".getBytes()
