@@ -105,9 +105,18 @@
                         <a th:href="@{/recipes/{recipeId}/change-image(recipeId=${recipeId})}" class="btn btn-secondary">Change image</a>
                     </div>
                     <div class="card-body">
-                        <div class="w-75 shadow mx-auto h-100 align-items-center d-flex rounded-1 justify-content-center">
-                            <img src="../../static/img/placeholder-image.png" class="w-100 ratio-1x1 img-fluid" th:src="@{/img/placeholder-image.png}" alt="placeholder">
-                        </div>
+                        <img
+                                src="../../static/img/placeholder-image.png"
+                                class="w-100 ratio-1x1 img-fluid"
+                                th:src="@{/img/placeholder-image.png}" alt="placeholder"
+                                th:if="(${recipe.image}) == null"
+                        >
+                        <img
+                                src="../../static/img/placeholder-image.png"
+                                class="w-100 ratio-1x1 img-fluid"
+                                th:src="@{/recipes/{recipeId}/image(recipeId=${recipeId})}" alt="placeholder"
+                                th:if="(${recipe.image}) != null"
+                        >
                     </div>
                 </div>
             </div>

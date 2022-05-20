@@ -3,9 +3,15 @@ package dev.manuelsilva.recipeapp.controllers;
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.services.RecipeService;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Controller
 @RequestMapping("/recipes")
@@ -60,5 +66,18 @@ public class RecipeController {
         RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
         model.addAttribute("recipe", recipe);
         return "recipes/imageForm";
+    }
+
+    @GetMapping("/{recipeId}/image")
+    public void retrieveImage(@PathVariable String recipeId, HttpServletResponse response) throws IOException {
+        RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
+        // TODO: Check if the recipe actually has an image
+        byte[] bytesFromImage = new byte[recipe.getImage().length];
+        for (int i = 0; i < recipe.getImage().length; i++) {
+            bytesFromImage[i] = recipe.getImage()[i];
+        }
+        response.setContentType("image/jpeg");
+        InputStream inputStream = new ByteArrayInputStream(bytesFromImage);
+        IOUtils.copy(inputStream, response.getOutputStream());
     }
 }

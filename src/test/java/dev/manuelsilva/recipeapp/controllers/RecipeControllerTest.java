@@ -10,6 +10,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
@@ -135,5 +136,27 @@ class RecipeControllerTest {
                 .andExpect(model().attributeExists("recipe"));
 
         verify(recipeService, times(1)).getRecipeCommandById(anyLong());
+    }
+
+
+    @Test
+    void testRenderImageFromDB() throws Exception {
+        RecipeCommand command = new RecipeCommand();
+        command.setId(1L);
+        String fakeImage = "Some string to replace a non existing image u.u";
+        byte[] primitiveBytesFromImage = fakeImage.getBytes();
+        Byte[] bytesFromImage = new Byte[primitiveBytesFromImage.length];
+        for (int i = 0; i < primitiveBytesFromImage.length; i++) {
+            bytesFromImage[i] = primitiveBytesFromImage[i];
+        }
+        command.setImage(bytesFromImage);
+        when(recipeService.getRecipeCommandById(eq(1L))).thenReturn(command);
+        MockHttpServletResponse response = mockMvc.perform(get("/recipes/1/image"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+
+        byte[] bytesFromResponse = response.getContentAsByteArray();
+        assertEquals(primitiveBytesFromImage.length, bytesFromResponse.length);
     }
 }
