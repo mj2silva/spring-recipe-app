@@ -7,20 +7,33 @@
 <body>
 <div class="container">
     <form class="my-3" th:object="${recipe}" th:action="@{/recipes/}" th:method="post">
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+            <p th:text="#{form.onErrorMessage}">Please check the form for errors</p>
+        </div>
         <input type="hidden" th:field="*{id}" />
         <div class="card mb-2">
             <div class="card-header">
-                <h5 class="card-title">Edit recipe information</h5>
+                <h5 class="card-title" th:text="#{recipe.formTitle}">Edit recipe information</h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <label class="col-md-2 col-12" for="description">Recipe description</label>
+                    <label class="col-md-2 col-12" for="description" th:text="#{recipe.description}">Recipe description</label>
                     <div class="col-12 col-md-10">
                         <input type="text" class="form-control" id="description" th:field="*{description}">
+                        <div th:if="${#fields.hasErrors('description')}" class="help-footnote">
+                            <ul>
+                                <li
+                                    th:each="error: ${#fields.errors('description')}"
+                                    th:text="${error}"
+                                >
+                                    (error message)
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <fieldset class="row mt-md-2">
-                    <legend class="col-form-label col-md-2 col-12">Categories</legend>
+                    <legend class="col-form-label col-md-2 col-12" th:text="#{recipe.categories}">Categories</legend>
                     <div class="col-12 col-md-10 mb-2 mt-md-2">
                         <div class="form-check">
                             <label class="form-check-label" for="cat-1">Cat 1</label>
@@ -38,19 +51,19 @@
                 </fieldset>
                 <div class="row row-cols-md-2 row-cols-lg-3 row-cols-1">
                     <div class="col">
-                        <label for="prepTime">Prep Time:</label>
+                        <label for="prepTime" th:text="#{recipe.prepTime}">Prep Time:</label>
                         <div>
                             <input type="text" id="prepTime" class="form-control" th:field="*{prepTime}">
                         </div>
                     </div>
                     <div class="col">
-                        <label for="cookTime">Cook Time:</label>
+                        <label for="cookTime" th:text="#{recipe.cookTime}">Cook Time:</label>
                         <div>
                             <input type="text" id="cookTime" class="form-control" th:field="*{cookTime}">
                         </div>
                     </div>
                     <div class="col">
-                        <label for="difficulty">Difficulty:</label>
+                        <label for="difficulty" th:text="#{recipe.difficulty}">Difficulty:</label>
                         <div>
                             <select id="difficulty" class="form-select" th:field="*{difficulty}">
                                 <option
@@ -64,19 +77,19 @@
                         </div>
                     </div>
                     <div class="col">
-                        <label for="servings">Servings:</label>
+                        <label for="servings" th:text="#{recipe.servings}">Servings:</label>
                         <div>
                             <input type="text" class="form-control" id="servings" th:field="*{servings}">
                         </div>
                     </div>
                     <div class="col">
-                        <label for="source">Source:</label>
+                        <label for="source" th:text="#{recipe.source}">Source:</label>
                         <div>
                             <input type="text" class="form-control" id="source" th:field="*{source}">
                         </div>
                     </div>
                     <div class="col">
-                        <label for="url">Url:</label>
+                        <label for="url" th:text="#{recipe.url}">Url:</label>
                         <div>
                             <input type="text" class="form-control" id="url" th:field="*{url}">
                         </div>
@@ -88,8 +101,8 @@
             <div class="col">
                 <div class="card mb-2">
                     <div class="card-header d-flex justify-content-between align-middle">
-                        <h5 class="card-title">Ingredients</h5>
-                        <button class="btn btn-secondary">Edit</button>
+                        <h5 class="card-title" th:text="#{recipe.ingredients}">Ingredients</h5>
+                        <button class="btn btn-secondary" th:text="#{button.edit}">Edit</button>
                     </div>
                     <div class="card-body">
                         <ul th:each="ingredient: ${recipe.ingredients}">
@@ -101,8 +114,8 @@
             <div class="col mb-2">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-middle">
-                        <h5 class="card-title">Image</h5>
-                        <a th:href="@{/recipes/{recipeId}/change-image(recipeId=${recipeId})}" class="btn btn-secondary">Change image</a>
+                        <h5 class="card-title" th:text="#{recipe.image}">Image</h5>
+                        <a th:href="@{/recipes/{recipeId}/change-image(recipeId=${recipeId})}" th:text="#{button.changeImage}" class="btn btn-secondary">Change image</a>
                     </div>
                     <div class="card-body">
                         <img
@@ -123,10 +136,10 @@
         </div>
         <div class="card mb-2">
             <div class="card-header">
-                <h5 class="card-title">Directions</h5>
+                <h5 class="card-title" th:text="#{recipe.directions}">Directions</h5>
             </div>
             <div class="card-body">
-                <label class="d-none" for="directions">Directions</label>
+                <label class="d-none" for="directions" th:text="#{recipe.directions}">Directions</label>
                 <div>
                     <textarea class="form-control" id="directions" th:field="*{directions}"></textarea>
                 </div>
@@ -134,16 +147,16 @@
         </div>
         <div class="card mb-2">
             <div class="card-header">
-                <h5 class="card-title">Notes</h5>
+                <h5 class="card-title" th:text="#{recipe.notes}">Notes</h5>
             </div>
             <div class="card-body">
-                <label for="notes" class="d-none">Notes</label>
+                <label for="notes" class="d-none" th:text="#{recipe.notes}">Notes</label>
                 <div>
                     <textarea id="notes" class="form-control" th:field="*{notesCommand.recipeNotes}"></textarea>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-dark float-end">Save</button>
+        <button type="submit" class="btn btn-dark float-end" th:text="#{button.save}">Save</button>
     </form>
 </div>
 </body>

@@ -8,7 +8,7 @@
     <div class="container">
             <div class="card my-2 border-0">
                 <div class="card-header bg-white bg-opacity-50">
-                <h2 class="text-center my-2">Recipes list</h2>
+                <h2 class="text-center my-2" th:text="#{recipe.listTitle}">Recipes list</h2>
                 </div>
                 <div class="card-body">
                 <div class="table-responsive">
@@ -16,12 +16,12 @@
                     <thead>
                         <tr class="table-dark">
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Prep time</th>
-                            <th>Cook time</th>
-                            <th>Instructions</th>
-                            <th>Notes</th>
-                            <th>Link</th>
+                            <th th:text="#{recipe.description}">Name</th>
+                            <th th:text="#{recipe.prepTime}">Prep time</th>
+                            <th th:text="#{recipe.cookTime}">Cook time</th>
+                            <th th:text="#{recipe.directions}">Instructions</th>
+                            <th th:text="#{recipe.notes}">Notes</th>
+                            <th th:text="#{recipe.url}">Link</th>
                         </tr>
                     </thead>
                     <tbody>

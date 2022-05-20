@@ -119,6 +119,10 @@ class RecipeControllerTest {
                         post("/recipes")
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                 .param("id", "")
+                                .param("description", "")
+                                .param("directions", "")
+                                .param("cookTime", "")
+                                .param("difficulty", "EASY")
                 )
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/form"));
