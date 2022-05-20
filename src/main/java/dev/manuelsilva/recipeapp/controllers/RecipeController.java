@@ -8,10 +8,12 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +60,10 @@ public class RecipeController {
     }
 
     @PostMapping({"", "/"})
-    public String saveOrUpdate(@ModelAttribute RecipeCommand command) {
+    public String saveOrUpdate(@Valid @ModelAttribute RecipeCommand command, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "recipes/form";
+        }
         RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
         return "redirect:/recipes/" + savedCommand.getId();
     }
