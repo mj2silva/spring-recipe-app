@@ -67,7 +67,7 @@
                         <ul>
                             <li
                                     th:each="ingredient: ${recipe.ingredients}"
-                                    th:text="${ingredient.amount} + ' ' + ${ingredient.uom.uom} + ' of ' + ${ingredient.description}">
+                                    th:text="${ingredient.amount} + ' ' + ${ingredient.unitOfMeasure.uom} + ' of ' + ${ingredient.description}">
                                 Ingredient name
                             </li>
                         </ul>
@@ -104,7 +104,7 @@
                 <div class="col card">
                     <div class="card-body">
                         <h3>Notes:</h3>
-                        <p style="white-space: pre-line" th:if="(${recipe.notes} != null)" th:text="${recipe.notes.recipeNotes}"></p>
+                        <p style="white-space: pre-line" th:if="(${recipe.notesCommand.recipeNotes} != null)" th:text="${recipe.notesCommand.recipeNotes}"></p>
                     </div>
                 </div>
             </div>

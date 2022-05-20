@@ -2,11 +2,14 @@ package dev.manuelsilva.recipeapp.controllers;
 
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;
+import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
 import dev.manuelsilva.recipeapp.services.RecipeService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -28,10 +31,17 @@ public class RecipeController {
         return "recipes/index";
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ModelAndView notFoundExceptionHandler(Exception exception) {
+        ModelAndView modelAndView = new ModelAndView("errors/404");
+        modelAndView.addObject("error", exception);
+        return modelAndView;
+    }
+
     @GetMapping(value = {"/{recipeId}"})
     public String getRecipe(Model model, @PathVariable String recipeId) {
-        Long lRecipeId = Long.valueOf(recipeId);
-        Recipe recipe = recipeService.getRecipeById(lRecipeId);
+        RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
         model.addAttribute("recipe", recipe);
         return "recipes/show";
     }

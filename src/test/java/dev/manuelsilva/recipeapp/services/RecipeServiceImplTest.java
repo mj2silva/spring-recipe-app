@@ -1,8 +1,10 @@
 package dev.manuelsilva.recipeapp.services;
 
+import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.converters.RecipeCommandToRecipe;
 import dev.manuelsilva.recipeapp.converters.RecipeToRecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;
+import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
 import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,8 +59,18 @@ class RecipeServiceImplTest {
         verify(recipeRepository).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }
-
-
+    @Test
+    void testGetRecipeByIdNotFound() {
+        Optional<Recipe> optionalRecipe = Optional.empty();
+        when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
+                () -> recipeService.getRecipeCommandById(1L),
+                "Expected to throw an error"
+        );
+        verify(recipeRepository, times(1)).findById(anyLong());
+        assertTrue(exception.getMessage().contains("Recipe not found"));
+    }
     @Test
     void testDeleteById() {
         Long idToDelete = 2L;

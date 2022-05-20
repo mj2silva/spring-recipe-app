@@ -2,7 +2,9 @@ package dev.manuelsilva.recipeapp.controllers;
 
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;
+import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
 import dev.manuelsilva.recipeapp.services.RecipeService;
+import org.aspectj.weaver.ast.Not;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -16,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,10 +72,10 @@ class RecipeControllerTest {
 
     @Test
     void getRecipe() throws Exception {
-        Recipe recipe = new Recipe();
+        RecipeCommand recipe = new RecipeCommand();
         recipe.setId(1L);
 
-        when(recipeService.getRecipeById(anyLong())).thenReturn(recipe);
+        when(recipeService.getRecipeCommandById(anyLong())).thenReturn(recipe);
 
         mockMvc
                 .perform(get("/recipes/1"))
@@ -80,7 +83,6 @@ class RecipeControllerTest {
                 .andExpect(view().name("recipes/show"))
                 .andExpect(model().attributeExists("recipe"));
     }
-
     @Test
     void getNewRecipeForm() throws Exception {
         mockMvc.perform(get("/recipes/new"))
@@ -158,5 +160,13 @@ class RecipeControllerTest {
 
         byte[] bytesFromResponse = response.getContentAsByteArray();
         assertEquals(primitiveBytesFromImage.length, bytesFromResponse.length);
+    }
+
+    @Test
+    void testRecipeNotFoundHandler() throws Exception {
+        when(recipeService.getRecipeCommandById(anyLong())).thenThrow(NotFoundException.class);
+        mockMvc.perform(get("/recipes/1"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("errors/404"));
     }
 }

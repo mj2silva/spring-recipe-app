@@ -4,6 +4,7 @@ import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.converters.RecipeCommandToRecipe;
 import dev.manuelsilva.recipeapp.converters.RecipeToRecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;
+import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
 import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe getRecipeById(Long id) {
-        return recipeRepository.findById(id).orElse(null);
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(id);
+        if (optionalRecipe.isEmpty()) throw new NotFoundException("Recipe not found");
+        return optionalRecipe.get();
     }
 
     @Override
@@ -50,7 +53,8 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeCommand getRecipeCommandById(Long id) {
         Optional<Recipe> detachedRecipe = recipeRepository.findById(id);
-        return recipeToRecipeCommand.convert(detachedRecipe.orElse(null));
+        if (detachedRecipe.isEmpty()) throw new NotFoundException("Recipe not found");
+        return recipeToRecipeCommand.convert(detachedRecipe.get());
     }
 
     @Override

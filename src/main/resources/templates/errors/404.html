@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body}, 'recipes')}">
+<head>
+  <title>Error 404</title>
+</head>
+<body>
+<div class="container d-flex justify-content-center align-items-center flex-column" style="min-height: 35rem; max-height: 100vh">
+  <h1 style="font-size: 10rem">404</h1>
+  <div>
+    <span style="font-size: 7rem">😟</span>
+  </div>
+  <p style="font-size: 4rem" th:text="${error.message}">(error message)</p>
+</div>
+</body>
+</html>
