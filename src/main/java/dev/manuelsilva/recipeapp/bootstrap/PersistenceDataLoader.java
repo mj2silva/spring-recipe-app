@@ -13,14 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Component
-@Profile("default")
+@Profile({"dev","prod"})
 @Slf4j
-public class DataLoader implements CommandLineRunner {
+public class PersistenceDataLoader implements CommandLineRunner {
     private final RecipeRepository recipeRepository;
     private final CategoryRepository categoryRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
 
-    public DataLoader(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
+    public PersistenceDataLoader(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
         this.recipeRepository = recipeRepository;
         this.categoryRepository = categoryRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
@@ -30,8 +30,12 @@ public class DataLoader implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         log.info("Starting to load data");
-        loadData();
-        log.info("Finish loading data");
+        if (recipeRepository.count() == 0) {
+            loadData();
+            log.info("Finish loading data");
+        } else {
+            log.info("Recipes founded in database, initial population skipped");
+        }
     }
 
     private void loadData() {
@@ -74,8 +78,8 @@ public class DataLoader implements CommandLineRunner {
         Notes guacamoleNotes = new Notes();
         guacamoleNotes.setRecipeNotes(
                 "Be careful handling chilis! If using, it's best to wear food-safe gloves. " +
-                "If no gloves are available, wash your hands thoroughly after handling, and " +
-                "do not touch your eyes or the area near your eyes for several hours afterwards."
+                        "If no gloves are available, wash your hands thoroughly after handling, and " +
+                        "do not touch your eyes or the area near your eyes for several hours afterwards."
         );
         perfectGuacamole.setNotes(guacamoleNotes);
         perfectGuacamole.setDescription("The Best Guacamole");
@@ -123,9 +127,9 @@ public class DataLoader implements CommandLineRunner {
         Notes chickenTacosNotes = new Notes();
         chickenTacosNotes.setRecipeNotes(
                 "Look for ancho chile powder with the Mexican ingredients at your grocery store, " +
-                "on buy it online. (If you can't find ancho chili powder, you replace the ancho chili, " +
-                "the oregano, and the cumin with 2 1/2 tablespoons regular chili powder, though the " +
-                "flavor won't be quite the same.)"
+                        "on buy it online. (If you can't find ancho chili powder, you replace the ancho chili, " +
+                        "the oregano, and the cumin with 2 1/2 tablespoons regular chili powder, though the " +
+                        "flavor won't be quite the same.)"
         );
         chickenTacos.setNotes(chickenTacosNotes);
         chickenTacos.setDescription("Spicy Grilled Chicken Tacos");
