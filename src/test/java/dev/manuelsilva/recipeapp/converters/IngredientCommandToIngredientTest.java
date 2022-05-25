@@ -3,7 +3,6 @@ package dev.manuelsilva.recipeapp.converters;
 import dev.manuelsilva.recipeapp.commands.IngredientCommand;
 import dev.manuelsilva.recipeapp.commands.UnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.domain.Ingredient;
-import dev.manuelsilva.recipeapp.domain.Recipe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

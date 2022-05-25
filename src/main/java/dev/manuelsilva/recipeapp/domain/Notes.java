@@ -1,8 +1,7 @@
 package dev.manuelsilva.recipeapp.domain;
 
-import lombok.*;
-
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

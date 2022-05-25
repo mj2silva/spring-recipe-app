@@ -2,7 +2,6 @@ package dev.manuelsilva.recipeapp.services;
 
 import dev.manuelsilva.recipeapp.commands.UnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.converters.UnitOfMeasureToUnitOfMeasureCommand;
-import dev.manuelsilva.recipeapp.domain.UnitOfMeasure;
 import dev.manuelsilva.recipeapp.repositories.UnitOfMeasureRepository;
 import org.springframework.stereotype.Service;
 

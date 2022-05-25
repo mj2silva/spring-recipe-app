@@ -2,8 +2,6 @@ package dev.manuelsilva.recipeapp.controllers;
 
 import dev.manuelsilva.recipeapp.commands.IngredientCommand;
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
-import dev.manuelsilva.recipeapp.domain.Ingredient;
-import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.services.IngredientService;
 import dev.manuelsilva.recipeapp.services.RecipeService;
 import dev.manuelsilva.recipeapp.services.UnitOfMeasureService;

@@ -1,6 +1,5 @@
 package dev.manuelsilva.recipeapp.services;
 
-import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.converters.RecipeCommandToRecipe;
 import dev.manuelsilva.recipeapp.converters.RecipeToRecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;

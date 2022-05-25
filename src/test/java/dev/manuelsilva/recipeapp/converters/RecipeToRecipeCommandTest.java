@@ -1,8 +1,6 @@
 package dev.manuelsilva.recipeapp.converters;
 
-import dev.manuelsilva.recipeapp.commands.CategoryCommand;
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
-import dev.manuelsilva.recipeapp.commands.UnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
