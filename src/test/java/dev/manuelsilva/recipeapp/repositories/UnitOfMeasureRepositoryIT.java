@@ -1,7 +1,9 @@
 package dev.manuelsilva.recipeapp.repositories;
 
 import dev.manuelsilva.recipeapp.domain.UnitOfMeasure;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 class UnitOfMeasureRepositoryIT {

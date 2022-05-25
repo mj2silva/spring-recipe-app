@@ -44,6 +44,6 @@ class ImageControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("location", "/recipes/1"));
 
-        verify(imageService, times(1)).saveImageFile(eq(1L), any(MultipartFile.class));
+        verify(imageService, times(1)).saveImageFile(eq("1"), any(MultipartFile.class));
     }
 }

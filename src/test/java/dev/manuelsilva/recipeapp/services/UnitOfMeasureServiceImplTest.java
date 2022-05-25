@@ -32,10 +32,10 @@ class UnitOfMeasureServiceImplTest {
     void getAllUnitsOfMeasure() {
         Set<UnitOfMeasure> unitOfMeasures = new HashSet<>();
         UnitOfMeasure uom_1 = new UnitOfMeasure();
-        uom_1.setId(1L);
+        uom_1.setId("1L");
         unitOfMeasures.add(uom_1);
         UnitOfMeasure uom_2 = new UnitOfMeasure();
-        uom_2.setId(2L);
+        uom_2.setId("2L");
         unitOfMeasures.add(uom_2);
 
         when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasures);

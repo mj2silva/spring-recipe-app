@@ -35,7 +35,7 @@ public class RecipeController {
 
     @GetMapping(value = {"/{recipeId}"})
     public String getRecipe(Model model, @PathVariable String recipeId) {
-        RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
+        RecipeCommand recipe = recipeService.getRecipeCommandById(recipeId);
         model.addAttribute("recipe", recipe);
         return "recipes/show";
     }
@@ -48,14 +48,14 @@ public class RecipeController {
 
     @GetMapping("/{recipeId}/update")
     public String editRecipe(Model model, @PathVariable String recipeId) {
-        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
+        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(recipeId);
         model.addAttribute("recipe", recipeCommand);
         return "recipes/form";
     }
 
     @GetMapping("/{recipeId}/delete")
     public String deleteRecipe(@PathVariable String recipeId) {
-        recipeService.deleteById(Long.valueOf(recipeId));
+        recipeService.deleteById(recipeId);
         return "redirect:/recipes/";
     }
 
@@ -70,14 +70,14 @@ public class RecipeController {
 
     @GetMapping("/{recipeId}/change-image")
     public String changeImage(Model model, @PathVariable String recipeId) {
-        RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
+        RecipeCommand recipe = recipeService.getRecipeCommandById(recipeId);
         model.addAttribute("recipe", recipe);
         return "recipes/imageForm";
     }
 
     @GetMapping("/{recipeId}/image")
     public void retrieveImage(@PathVariable String recipeId, HttpServletResponse response) throws IOException {
-        RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
+        RecipeCommand recipe = recipeService.getRecipeCommandById(recipeId);
         // TODO: Check if the recipe actually has an image
         byte[] bytesFromImage = new byte[recipe.getImage().length];
         for (int i = 0; i < recipe.getImage().length; i++) {

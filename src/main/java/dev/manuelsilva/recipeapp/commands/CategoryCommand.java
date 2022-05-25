@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 public class CategoryCommand {
-    private Long id;
+    private String id;
     @NotBlank
     @Size(min = 3, max = 255)
     private String description;

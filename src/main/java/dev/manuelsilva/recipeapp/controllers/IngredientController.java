@@ -31,14 +31,14 @@ public class IngredientController {
 
     @GetMapping("/recipes/{recipeId}/ingredients")
     public String getIngredientsList(Model model, @PathVariable String recipeId) {
-        RecipeCommand command = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
+        RecipeCommand command = recipeService.getRecipeCommandById(recipeId);
         model.addAttribute("recipe", command);
         return "recipes/ingredients/list";
     }
     @GetMapping("/recipes/{recipeId}/ingredients/{ingredientId}")
     public String showIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
-        IngredientCommand ingredient = ingredientService.findById(Long.valueOf(ingredientId));
-        if (!ingredient.getRecipeId().equals(Long.valueOf(recipeId))) {
+        IngredientCommand ingredient = ingredientService.findById(ingredientId);
+        if (!ingredient.getRecipeId().equals(recipeId)) {
             return String.format("redirect:/recipes/%s/ingredients/%s", ingredient.getRecipeId(), ingredient.getId());
         }
         model.addAttribute("ingredient", ingredient);
@@ -47,8 +47,8 @@ public class IngredientController {
 
     @GetMapping("/recipes/{recipeId}/ingredients/{ingredientId}/edit")
     public String editIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
-        IngredientCommand ingredient = ingredientService.findById(Long.valueOf(ingredientId));
-        if (!ingredient.getRecipeId().equals(Long.valueOf(recipeId))) {
+        IngredientCommand ingredient = ingredientService.findById(ingredientId);
+        if (!ingredient.getRecipeId().equals(recipeId)) {
             return String.format("redirect:/recipes/%s/ingredients/%s/edit", ingredient.getRecipeId(), ingredient.getId());
         }
         Set<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
@@ -59,10 +59,10 @@ public class IngredientController {
 
     @GetMapping("/recipes/{recipeId}/ingredients/new")
     public String createIngredient(Model model, @PathVariable String recipeId) {
-        RecipeCommand recipe = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
+        RecipeCommand recipe = recipeService.getRecipeCommandById(recipeId);
         if (recipe == null) return "redirect:/recipes";
         IngredientCommand ingredientCommand = new IngredientCommand();
-        ingredientCommand.setRecipeId(Long.valueOf(recipeId));
+        ingredientCommand.setRecipeId(recipeId);
         ingredientCommand.setRecipeDescription(recipe.getDescription());
         Set<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
         model.addAttribute("ingredient", ingredientCommand);
@@ -72,11 +72,11 @@ public class IngredientController {
 
     @GetMapping("/recipes/{recipeId}/ingredients/{ingredientId}/delete")
     public String deleteIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
-        IngredientCommand ingredient = ingredientService.findById(Long.valueOf(ingredientId));
-        if (!ingredient.getRecipeId().equals(Long.valueOf(recipeId))) {
+        IngredientCommand ingredient = ingredientService.findById(ingredientId);
+        if (!ingredient.getRecipeId().equals(recipeId)) {
             return String.format("redirect:/recipes/%s/ingredients", recipeId);
         }
-        ingredientService.deleteById(Long.valueOf(ingredientId));
+        ingredientService.deleteById(ingredientId);
         return String.format("redirect:/recipes/%s/ingredients", recipeId);
     }
 

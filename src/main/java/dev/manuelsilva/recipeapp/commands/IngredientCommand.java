@@ -12,8 +12,8 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 public class IngredientCommand {
-    private Long id;
-    private Long recipeId;
+    private String id;
+    private String recipeId;
     private String recipeDescription;
     @NotBlank
     @Size(min = 3, max = 255)

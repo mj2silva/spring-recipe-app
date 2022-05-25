@@ -16,7 +16,7 @@ class CategoryTest {
 
     @Test
     void getId() {
-        Long mockId = 1455848484L;
+        String mockId = "1455848484L";
         category.setId(mockId);
         assertEquals(mockId, category.getId());
     }

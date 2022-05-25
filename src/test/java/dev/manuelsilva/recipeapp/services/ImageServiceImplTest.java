@@ -36,11 +36,11 @@ class ImageServiceImplTest {
                 "Some random and unusual text".getBytes()
         );
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1L");
         Optional<Recipe> optionalRecipe = Optional.of(recipe);
-        when(recipeRepository.findById(eq(1L))).thenReturn(optionalRecipe);
+        when(recipeRepository.findById(eq("1L"))).thenReturn(optionalRecipe);
         ArgumentCaptor<Recipe> recipeArgumentCaptor = ArgumentCaptor.forClass(Recipe.class);
-        imageService.saveImageFile(1L, multipartFile);
+        imageService.saveImageFile("1L", multipartFile);
 
         verify(recipeRepository, times(1)).save(recipeArgumentCaptor.capture());
         Recipe savedRecipe = recipeArgumentCaptor.getValue();

@@ -27,7 +27,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientCommand findById(Long id) {
+    public IngredientCommand findById(String id) {
         Ingredient detachedIngredient = ingredientRepository.findById(id).orElse(null);
         return ingredientToIngredientCommand.convert(detachedIngredient);
     }
@@ -45,7 +45,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteById(Long ingredientId) {
+    public void deleteById(String ingredientId) {
         ingredientRepository.deleteById(ingredientId);
     }
 }

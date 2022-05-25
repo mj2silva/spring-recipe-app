@@ -15,8 +15,8 @@ class IngredientCommandToIngredientTest {
 
     static final BigDecimal AMOUNT = new BigDecimal(10);
     static final String DESCRIPTION = "Meatballs";
-    static final Long INGREDIENT_ID = 1L;
-    static final Long UOM_ID = 1L;
+    static final String INGREDIENT_ID = "1L";
+    static final String UOM_ID = "1L";
 
     IngredientCommandToIngredient converter;
 

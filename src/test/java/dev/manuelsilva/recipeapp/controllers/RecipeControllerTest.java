@@ -58,9 +58,9 @@ class RecipeControllerTest {
     @Test
     void getRecipes() {
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1L");
         Recipe recipe2 = new Recipe();
-        recipe2.setId(2L);
+        recipe2.setId("2L");
         HashSet<Recipe> recipes = new HashSet<>();
         recipes.add(recipe);
         recipes.add(recipe2);
@@ -76,9 +76,9 @@ class RecipeControllerTest {
     @Test
     void getRecipe() throws Exception {
         RecipeCommand recipe = new RecipeCommand();
-        recipe.setId(1L);
+        recipe.setId("1L");
 
-        when(recipeService.getRecipeCommandById(anyLong())).thenReturn(recipe);
+        when(recipeService.getRecipeCommandById(anyString())).thenReturn(recipe);
 
         mockMvc
                 .perform(get("/recipes/1"))
@@ -97,7 +97,7 @@ class RecipeControllerTest {
     @Test
     void postNewRecipe() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(2L);
+        command.setId("2L");
         when(recipeService.saveRecipeCommand(any(RecipeCommand.class))).thenReturn(command);
         mockMvc.perform(
                 post("/recipes")
@@ -107,13 +107,13 @@ class RecipeControllerTest {
                         .param("directions", "do some stuffs")
             )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/recipes/2"));
+                .andExpect(view().name("redirect:/recipes/2L"));
     }
 
     @Test
     void postEmptyRecipe() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(2L);
+        command.setId("2L");
         when(recipeService.saveRecipeCommand(any(RecipeCommand.class))).thenReturn(command);
         mockMvc.perform(
                         post("/recipes")
@@ -131,9 +131,9 @@ class RecipeControllerTest {
     @Test
     void testGetUpdateView() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(2L);
-        when(recipeService.getRecipeCommandById(eq(2L))).thenReturn(command);
-        mockMvc.perform(get("/recipes/2/update"))
+        command.setId("2L");
+        when(recipeService.getRecipeCommandById(eq("2L"))).thenReturn(command);
+        mockMvc.perform(get("/recipes/2L/update"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/form"))
                 .andExpect(model().attributeExists("recipe"));
@@ -141,32 +141,32 @@ class RecipeControllerTest {
 
     @Test
     void testDeleteAction() throws Exception {
-        mockMvc.perform(get("/recipes/1/delete"))
+        mockMvc.perform(get("/recipes/1L/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipes/"));
 
-        verify(recipeService, times(1)).deleteById(anyLong());
+        verify(recipeService, times(1)).deleteById(anyString());
     }
 
     @Test
     void testChangeRecipeImageForm() throws Exception {
         RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(1L);
+        recipeCommand.setId("1L");
 
-        when(recipeService.getRecipeCommandById(eq(1L))).thenReturn(recipeCommand);
+        when(recipeService.getRecipeCommandById(eq("1L"))).thenReturn(recipeCommand);
 
-        mockMvc.perform(get("/recipes/1/change-image"))
+        mockMvc.perform(get("/recipes/1L/change-image"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("recipe"));
 
-        verify(recipeService, times(1)).getRecipeCommandById(anyLong());
+        verify(recipeService, times(1)).getRecipeCommandById(anyString());
     }
 
 
     @Test
     void testRenderImageFromDB() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(1L);
+        command.setId("1L");
         String fakeImage = "Some string to replace a non existing image u.u";
         byte[] primitiveBytesFromImage = fakeImage.getBytes();
         Byte[] bytesFromImage = new Byte[primitiveBytesFromImage.length];
@@ -174,8 +174,8 @@ class RecipeControllerTest {
             bytesFromImage[i] = primitiveBytesFromImage[i];
         }
         command.setImage(bytesFromImage);
-        when(recipeService.getRecipeCommandById(eq(1L))).thenReturn(command);
-        MockHttpServletResponse response = mockMvc.perform(get("/recipes/1/image"))
+        when(recipeService.getRecipeCommandById(eq("1L"))).thenReturn(command);
+        MockHttpServletResponse response = mockMvc.perform(get("/recipes/1L/image"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -186,17 +186,9 @@ class RecipeControllerTest {
 
     @Test
     void testRecipeNotFoundHandler() throws Exception {
-        when(recipeService.getRecipeCommandById(anyLong())).thenThrow(NotFoundException.class);
-        mockMvc.perform(get("/recipes/1"))
+        when(recipeService.getRecipeCommandById(anyString())).thenThrow(NotFoundException.class);
+        mockMvc.perform(get("/recipes/1L"))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("errors/404"));
-    }
-
-    @Test
-    void testRecipeWithWrongIdFormat() throws Exception {
-        // Notice the given id is not a number long like value, so the route should return a bad request response
-        mockMvc.perform(get("/recipes/wrong-id"))
-                .andExpect(status().isBadRequest())
-                .andExpect(view().name("errors/400WrongId"));
     }
 }

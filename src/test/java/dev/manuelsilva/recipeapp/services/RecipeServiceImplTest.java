@@ -50,30 +50,30 @@ class RecipeServiceImplTest {
     @Test
     void getRecipeById() {
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1L");
         Optional<Recipe> optionalRecipe = Optional.of(recipe);
-        when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
+        when(recipeRepository.findById(anyString())).thenReturn(optionalRecipe);
 
-        Recipe foundedRecipe = recipeService.getRecipeById(1L);
+        Recipe foundedRecipe = recipeService.getRecipeById("1L");
         assertNotNull(foundedRecipe, "Null recipe returned");
-        verify(recipeRepository).findById(anyLong());
+        verify(recipeRepository).findById(anyString());
         verify(recipeRepository, never()).findAll();
     }
     @Test
     void testGetRecipeByIdNotFound() {
         Optional<Recipe> optionalRecipe = Optional.empty();
-        when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
+        when(recipeRepository.findById(anyString())).thenReturn(optionalRecipe);
         NotFoundException exception = assertThrows(
                 NotFoundException.class,
-                () -> recipeService.getRecipeCommandById(1L),
+                () -> recipeService.getRecipeCommandById("1L"),
                 "Expected to throw an error"
         );
-        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, times(1)).findById(anyString());
         assertTrue(exception.getMessage().contains("Recipe not found"));
     }
     @Test
     void testDeleteById() {
-        Long idToDelete = 2L;
+        String idToDelete = "2L";
         recipeRepository.deleteById(idToDelete);
         verify(recipeRepository, times(1)).deleteById(eq(idToDelete));
     }

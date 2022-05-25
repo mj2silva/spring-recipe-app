@@ -18,7 +18,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void saveImageFile(Long id, MultipartFile file) {
+    public void saveImageFile(String id, MultipartFile file) {
         // TODO: Check if we can change Byte[] for byte[]
         try {
             Recipe recipe = recipeRepository.findById(id).orElse(null);
