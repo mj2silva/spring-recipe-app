@@ -1,7 +1,7 @@
 # Spring Recipe App
 
 [![CircleCI](https://circleci.com/gh/mj2silva/spring-recipe-app/tree/master.svg?style=svg)](https://circleci.com/gh/mj2silva/spring-recipe-app/tree/master)
-[![codecov](https://codecov.io/gh/mj2silva/spring-recipe-app/branch/master/graph/badge.svg?token=BHHBDRR8J2)](https://codecov.io/gh/mj2silva/spring-recipe-app)
+[![codecov](https://codecov.io/gh/mj2silva/spring-recipe-app/branch/mongo-db-version/graph/badge.svg?token=BHHBDRR8J2)](https://codecov.io/gh/mj2silva/spring-recipe-app)
 
 Java Spring project for learning.
 
