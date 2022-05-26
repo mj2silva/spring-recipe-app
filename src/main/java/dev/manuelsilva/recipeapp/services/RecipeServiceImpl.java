@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -28,8 +26,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Set<Recipe> getAllRecipes() {
-        Set<Recipe> recipes = new HashSet<>();
+    public List<Recipe> getAllRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
         recipeRepository.findAll().iterator().forEachRemaining(recipes::add);
         return recipes;
     }

@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -68,7 +69,7 @@ class IngredientControllerTest {
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId("1L");
         when(ingredientService.findById(anyString())).thenReturn(ingredientCommand);
-        when(unitOfMeasureService.getAllUnitsOfMeasure()).thenReturn(new HashSet<>());
+        when(unitOfMeasureService.getAllUnitsOfMeasure()).thenReturn(new ArrayList<>());
 
         mockMvc.perform(get("/recipes/1L/ingredients/2/edit"))
                 .andExpect(status().isOk())
@@ -83,7 +84,7 @@ class IngredientControllerTest {
         ingredientCommand.setRecipeId("1L");
         ingredientCommand.setId("2L");
         when(ingredientService.findById(anyString())).thenReturn(ingredientCommand);
-        when(unitOfMeasureService.getAllUnitsOfMeasure()).thenReturn(new HashSet<>());
+        when(unitOfMeasureService.getAllUnitsOfMeasure()).thenReturn(new ArrayList<>());
 
         mockMvc.perform(get("/recipes/2L/ingredients/2L/edit"))
                 .andExpect(status().is3xxRedirection())
@@ -96,7 +97,7 @@ class IngredientControllerTest {
         recipe.setId("2L");
 
         when(recipeService.getRecipeCommandById(eq("2L"))).thenReturn(recipe);
-        when(unitOfMeasureService.getAllUnitsOfMeasure()).thenReturn(new HashSet<>());
+        when(unitOfMeasureService.getAllUnitsOfMeasure()).thenReturn(new ArrayList<>());
 
         mockMvc.perform(get("/recipes/2L/ingredients/new"))
                 .andExpect(status().isOk())

@@ -16,7 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +34,7 @@ class RecipeControllerTest {
     @Mock
     Model model;
     @Captor
-    ArgumentCaptor<Set<Recipe>> recipesCaptor;
+    ArgumentCaptor<List<Recipe>> recipesCaptor;
     MockMvc mockMvc;
 
     @BeforeEach
@@ -58,7 +60,7 @@ class RecipeControllerTest {
         recipe.setId("1L");
         Recipe recipe2 = new Recipe();
         recipe2.setId("2L");
-        HashSet<Recipe> recipes = new HashSet<>();
+        List<Recipe> recipes = new ArrayList<>();
         recipes.add(recipe);
         recipes.add(recipe2);
         when(recipeService.getAllRecipes()).thenReturn(recipes);
@@ -66,7 +68,7 @@ class RecipeControllerTest {
         assertEquals("recipes/index", recipeController.getRecipes(model));
         verify(model, times(1)).addAttribute(eq("recipes"), recipesCaptor.capture());
         verify(recipeService, times(1)).getAllRecipes();
-        Set<Recipe> capturedRecipes = recipesCaptor.getValue();
+        List<Recipe> capturedRecipes = recipesCaptor.getValue();
         assertEquals(2, capturedRecipes.size());
     }
 

@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ class RecipeServiceImplTest {
         recipeData.add(recipe);
         when(recipeRepository.findAll()).thenReturn(recipeData);
 
-        Set<Recipe> recipes = recipeService.getAllRecipes();
+        List<Recipe> recipes = recipeService.getAllRecipes();
         assertEquals(1, recipes.size());
         verify(recipeRepository, times(1)).findAll();
     }

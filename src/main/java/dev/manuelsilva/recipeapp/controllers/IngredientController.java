@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -49,7 +50,7 @@ public class IngredientController {
         if (!ingredient.getRecipeId().equals(recipeId)) {
             return String.format("redirect:/recipes/%s/ingredients/%s/edit", ingredient.getRecipeId(), ingredient.getId());
         }
-        Set<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
+        List<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
         model.addAttribute("ingredient", ingredient);
         model.addAttribute("unitsOfMeasure", unitsOfMeasure);
         return "recipes/ingredients/edit";
@@ -62,7 +63,7 @@ public class IngredientController {
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(recipeId);
         ingredientCommand.setRecipeDescription(recipe.getDescription());
-        Set<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
+        List<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
         model.addAttribute("ingredient", ingredientCommand);
         model.addAttribute("unitsOfMeasure", unitsOfMeasure);
         return "recipes/ingredients/edit";

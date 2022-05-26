@@ -39,7 +39,6 @@ public class IngredientServiceImpl implements IngredientService {
         if (recipeOptional.isEmpty()) return null;
         Ingredient detachedIngredient = ingredientCommandToIngredient.convert(ingredientCommand);
         if (detachedIngredient == null) return null;
-        detachedIngredient.setRecipe(recipeOptional.get());
         Ingredient savedIngredient = ingredientRepository.save(detachedIngredient);
         return ingredientToIngredientCommand.convert(savedIngredient);
     }

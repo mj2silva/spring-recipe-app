@@ -3,14 +3,22 @@ package dev.manuelsilva.recipeapp.domain;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
+@Document
 @EqualsAndHashCode(exclude = {"notes", "ingredients"})
 public class Recipe {
+    @MongoId(FieldType.OBJECT_ID)
     private String id;
     private String description;
     private Integer prepTime;
@@ -22,23 +30,19 @@ public class Recipe {
     private Difficulty difficulty;
     private Byte[] image;
     private Notes notes;
-    private Set<Ingredient> ingredients;
-    private Set<Category> categories;
+    private List<Ingredient> ingredients;
+    @DBRef
+    private List<Category> categories;
 
-    public void setNotes(Notes notes) {
-        notes.setRecipe(this);
-        this.notes = notes;
-    }
-
-    public Set<Ingredient> addIngredient(Ingredient ingredient) {
-        if (this.ingredients == null) this.ingredients = new HashSet<>();
+    public List<Ingredient> addIngredient(Ingredient ingredient) {
+        if (this.ingredients == null) this.ingredients = new ArrayList<>();
         this.ingredients.add(ingredient);
-        ingredient.setRecipe(this);
+        // ingredient.setRecipe(this);
         return this.ingredients;
     }
 
-    public Set<Category> addCategory(Category category) {
-        if (this.categories == null) this.categories = new HashSet<>();
+    public List<Category> addCategory(Category category) {
+        if (this.categories == null) this.categories = new ArrayList<>();
         this.categories.add(category);
         return this.categories;
     }
