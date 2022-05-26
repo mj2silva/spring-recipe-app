@@ -1,11 +1,6 @@
 package dev.manuelsilva.recipeapp.repositories.reactive;
 
-import dev.manuelsilva.recipeapp.bootstrap.PersistenceDataLoader;
 import dev.manuelsilva.recipeapp.domain.UnitOfMeasure;
-import dev.manuelsilva.recipeapp.repositories.CategoryRepository;
-import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
-import dev.manuelsilva.recipeapp.repositories.UnitOfMeasureRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +10,9 @@ import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @DataMongoTest
