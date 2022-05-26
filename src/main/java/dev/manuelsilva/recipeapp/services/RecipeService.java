@@ -4,7 +4,6 @@ import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;
 
 import java.util.List;
-import java.util.Set;
 
 public interface RecipeService {
     List<Recipe> getAllRecipes();
