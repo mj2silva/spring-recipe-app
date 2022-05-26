@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Component
-@Profile({"dev","prod"})
+@Profile({"default","prod"})
 @Slf4j
 public class PersistenceDataLoader implements CommandLineRunner {
     private final RecipeRepository recipeRepository;

@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Component
-@Profile("default")
+@Profile("jpa")
 @Slf4j
 public class DataLoader implements CommandLineRunner {
     private final RecipeRepository recipeRepository;
