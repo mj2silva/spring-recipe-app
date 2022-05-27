@@ -3,27 +3,27 @@ package dev.manuelsilva.recipeapp.services;
 import dev.manuelsilva.recipeapp.commands.UnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.repositories.UnitOfMeasureRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final UnitOfMeasureReactiveRepository unitOfMeasureRepository;
     private final UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand;
 
-    public UnitOfMeasureServiceImpl(UnitOfMeasureRepository unitOfMeasureRepository, UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand) {
+    public UnitOfMeasureServiceImpl(UnitOfMeasureReactiveRepository unitOfMeasureRepository, UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand) {
         this.unitOfMeasureRepository = unitOfMeasureRepository;
         this.unitOfMeasureToUnitOfMeasureCommand = unitOfMeasureToUnitOfMeasureCommand;
     }
 
     @Override
-    public List<UnitOfMeasureCommand> getAllUnitsOfMeasure() {
-        List<UnitOfMeasureCommand> unitsOfMeasure = new ArrayList<>();
-        unitOfMeasureRepository
+    public Flux<UnitOfMeasureCommand> getAllUnitsOfMeasure() {
+        return unitOfMeasureRepository
                 .findAll()
-                .forEach(uom -> unitsOfMeasure.add(unitOfMeasureToUnitOfMeasureCommand.convert(uom)));
-        return unitsOfMeasure;
+                .mapNotNull(unitOfMeasureToUnitOfMeasureCommand::convert);
     }
 }

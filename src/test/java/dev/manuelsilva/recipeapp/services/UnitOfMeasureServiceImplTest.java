@@ -4,10 +4,12 @@ import dev.manuelsilva.recipeapp.commands.UnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.domain.UnitOfMeasure;
 import dev.manuelsilva.recipeapp.repositories.UnitOfMeasureRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +22,7 @@ class UnitOfMeasureServiceImplTest {
     UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand;
     UnitOfMeasureService unitOfMeasureService;
     @Mock
-    UnitOfMeasureRepository unitOfMeasureRepository;
+    UnitOfMeasureReactiveRepository unitOfMeasureRepository;
 
     @BeforeEach
     void setUp() {
@@ -31,18 +33,18 @@ class UnitOfMeasureServiceImplTest {
 
     @Test
     void getAllUnitsOfMeasure() {
-        Set<UnitOfMeasure> unitOfMeasures = new HashSet<>();
+        Flux<UnitOfMeasure> unitOfMeasures;
         UnitOfMeasure uom_1 = new UnitOfMeasure();
         uom_1.setId("1L");
-        unitOfMeasures.add(uom_1);
         UnitOfMeasure uom_2 = new UnitOfMeasure();
         uom_2.setId("2L");
-        unitOfMeasures.add(uom_2);
+
+        unitOfMeasures = Flux.just(uom_1, uom_2);
 
         when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasures);
 
-        List<UnitOfMeasureCommand> unitOfMeasureCommands = unitOfMeasureService.getAllUnitsOfMeasure();
-        assertEquals(2, unitOfMeasureCommands.size());
+        Flux<UnitOfMeasureCommand> unitOfMeasureCommands = unitOfMeasureService.getAllUnitsOfMeasure();
+        assertEquals(2, unitOfMeasureCommands.count().block());
         verify(unitOfMeasureRepository, times(1)).findAll();
     }
 }

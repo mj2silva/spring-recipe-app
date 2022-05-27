@@ -7,17 +7,21 @@ import dev.manuelsilva.recipeapp.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import dev.manuelsilva.recipeapp.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.domain.Ingredient;
 import dev.manuelsilva.recipeapp.domain.Recipe;
+import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
 import dev.manuelsilva.recipeapp.repositories.IngredientRepository;
 import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -26,7 +30,7 @@ class IngredientServiceImplTest {
     static String INGREDIENT_ID = "2L";
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
     @Mock
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeRepository;
     @Mock
     IngredientRepository ingredientRepository;
     IngredientService ingredientService;
@@ -57,13 +61,11 @@ class IngredientServiceImplTest {
         recipe.addIngredient(ingredient_1);
         recipe.addIngredient(ingredient_2);
         recipe.addIngredient(ingredient_3);
-        when(ingredientRepository.findById(eq("1L"))).thenReturn(Optional.of(ingredient_1));
-        when(ingredientRepository.findById(eq("2L"))).thenReturn(Optional.of(ingredient_2));
-        when(ingredientRepository.findById(eq("3L"))).thenReturn(Optional.of(ingredient_3));
+        when(recipeRepository.findById(eq("1L"))).thenReturn(Mono.just(recipe));
 
-        IngredientCommand ingredientCommand_1 = ingredientService.findById("1L");
+        IngredientCommand ingredientCommand_1 = ingredientService.findById("1L", "1L");
         assertEquals("1L", ingredientCommand_1.getId());
-        // assertEquals("1L", ingredientCommand_1.getRecipeId());
+        assertEquals("1L", ingredientCommand_1.getRecipeId());
     }
 
     @Test
@@ -79,33 +81,38 @@ class IngredientServiceImplTest {
         ingredientCommand.setId(INGREDIENT_ID);
         ingredientCommand.setRecipeId(RECIPE_ID);
 
-        when(recipeRepository.findById(eq(RECIPE_ID))).thenReturn(Optional.of(savedRecipe));
-        when(ingredientRepository.save(any(Ingredient.class))).thenReturn(ingredient);
+        when(recipeRepository.findById(eq(RECIPE_ID))).thenReturn(Mono.just(savedRecipe));
+        when(recipeRepository.save(any(Recipe.class))).thenReturn(Mono.just(savedRecipe));
 
-        IngredientCommand savedCommand = ingredientService.save(ingredientCommand);
+        IngredientCommand savedCommand = ingredientService.save(RECIPE_ID, ingredientCommand);
 
         assertEquals(INGREDIENT_ID, savedCommand.getId());
-        // assertEquals(RECIPE_ID, savedCommand.getRecipeId());
+        assertEquals(RECIPE_ID, savedCommand.getRecipeId());
         verify(recipeRepository, times(1)).findById(anyString());
-        verify(ingredientRepository, times(1)).save(any(Ingredient.class));
     }
 
     @Test
     void saveIngredientCommandWithNonExistingRecipe() {
+        Recipe recipe = new Recipe();
+        recipe.setId(RECIPE_ID);
+
         Ingredient ingredient = new Ingredient();
+        ingredient.setId(INGREDIENT_ID);
         IngredientCommand ingredientCommand = new IngredientCommand();
-
         ingredientCommand.setId(INGREDIENT_ID);
-        ingredientCommand.setRecipeId(RECIPE_ID);
 
-        when(recipeRepository.findById(eq(RECIPE_ID))).thenReturn(Optional.empty());
-        when(ingredientRepository.save(any(Ingredient.class))).thenReturn(ingredient);
+        when(recipeRepository.findById(eq("NOT_VALID_ID"))).thenReturn(Mono.empty());
+        when(recipeRepository.save(any(Recipe.class))).thenReturn(Mono.just(recipe));
 
-        IngredientCommand savedCommand = ingredientService.save(ingredientCommand);
-
-        assertNull(savedCommand);
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
+                () -> ingredientService.save("NOT_VALID_ID", ingredientCommand),
+                "Expected to throw an error"
+        );
         verify(recipeRepository, times(1)).findById(anyString());
-        verify(ingredientRepository, times(0)).save(any(Ingredient.class));
+        assertTrue(exception.getMessage().contains("Invalid recipe id"));
+        verify(recipeRepository, times(1)).findById(anyString());
+        verify(recipeRepository, times(0)).save(any(Recipe.class));
     }
 
     @Test
