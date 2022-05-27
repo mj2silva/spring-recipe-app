@@ -47,9 +47,17 @@ public class IngredientServiceImpl implements IngredientService {
         Recipe recipe = recipeOptional.get();
         Ingredient detachedIngredient = ingredientCommandToIngredient.convert(ingredientCommand);
         if (detachedIngredient == null) return null;
-        String randomIngredientId = UUID.randomUUID().toString();
-        if (detachedIngredient.getId() == null || Objects.equals(detachedIngredient.getId(), "")) detachedIngredient.setId(randomIngredientId);
-        recipe.addIngredient(detachedIngredient);
+        if (detachedIngredient.getId() == null || Objects.equals(detachedIngredient.getId(), "")) {
+            String randomIngredientId = UUID.randomUUID().toString();
+            detachedIngredient.setId(randomIngredientId);
+            recipe.addIngredient(detachedIngredient);
+        }
+        else {
+            Ingredient recipeIngredient = recipe.getIngredient(detachedIngredient.getId());
+            recipeIngredient.setDescription(detachedIngredient.getDescription());
+            recipeIngredient.setAmount(detachedIngredient.getAmount());
+            recipeIngredient.setUnitOfMeasure(detachedIngredient.getUnitOfMeasure());
+        }
         recipeRepository.save(recipe).block();
         IngredientCommand savedIngredientCommand = ingredientToIngredientCommand.convert(detachedIngredient);
         if (savedIngredientCommand != null) savedIngredientCommand.setRecipeId(recipe.getId());

@@ -38,6 +38,14 @@ public class Recipe {
         // ingredient.setRecipe(this);
         return this.ingredients;
     }
+    public Ingredient getIngredient(String ingredientId) {
+        if (this.ingredients == null) return null;
+        return this.ingredients
+                .stream()
+                .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                .findFirst()
+                .orElse(null);
+    }
 
     public List<Category> addCategory(Category category) {
         if (this.categories == null) this.categories = new ArrayList<>();
