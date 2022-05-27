@@ -1,7 +1,6 @@
 package dev.manuelsilva.recipeapp.services;
 
 import dev.manuelsilva.recipeapp.domain.Recipe;
-import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
 import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.converters.RecipeCommandToRecipe;
 import dev.manuelsilva.recipeapp.converters.RecipeToRecipeCommand;
 import dev.manuelsilva.recipeapp.domain.Recipe;
-import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class RecipeServiceIT {
     @Autowired
     RecipeService recipeService;
     @Autowired
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeRepository;
     @Autowired
     RecipeCommandToRecipe recipeCommandToRecipe;
     @Autowired
@@ -30,7 +30,7 @@ public class RecipeServiceIT {
 
     @Test
     public void testSaveOfDescription() {
-        Iterable<Recipe> recipes = recipeRepository.findAll();
+        Iterable<Recipe> recipes = recipeRepository.findAll().toIterable();
         Recipe testRecipe = recipes.iterator().next();
         RecipeCommand testRecipeCommand = recipeToRecipeCommand.convert(testRecipe);
 

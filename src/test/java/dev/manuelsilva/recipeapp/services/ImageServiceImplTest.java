@@ -1,7 +1,6 @@
 package dev.manuelsilva.recipeapp.services;
 
 import dev.manuelsilva.recipeapp.domain.Recipe;
-import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
 import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +10,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
