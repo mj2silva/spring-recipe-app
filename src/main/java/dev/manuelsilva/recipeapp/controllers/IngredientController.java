@@ -48,9 +48,7 @@ public class IngredientController {
     @GetMapping("/recipes/{recipeId}/ingredients/{ingredientId}/edit")
     public String editIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
         Mono<IngredientCommand> ingredient = ingredientService.findById(recipeId, ingredientId);
-        Flux<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
         model.addAttribute("ingredient", ingredient);
-        model.addAttribute("unitsOfMeasure", unitsOfMeasure);
         return "recipes/ingredients/edit";
     }
 
@@ -60,9 +58,7 @@ public class IngredientController {
         if (recipe == null) return "redirect:/recipes";
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(recipeId);
-        Flux<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
         model.addAttribute("ingredient", ingredientCommand);
-        model.addAttribute("unitsOfMeasure", unitsOfMeasure);
         return "recipes/ingredients/edit";
     }
 
@@ -78,5 +74,10 @@ public class IngredientController {
                 .map(savedCommand -> String.format("redirect:/recipes/%s/ingredients/%s", recipeId, savedCommand.getId()))
                 .doOnError(thr -> log.error(thr.getMessage()))
                 .onErrorResume(throwable -> Mono.just(String.format("redirect:/recipes/%s/ingredients/new", recipeId)));
+    }
+
+    @ModelAttribute("unitsOfMeasure")
+    public Flux<UnitOfMeasureCommand> populateUomList() {
+        return unitOfMeasureService.getAllUnitsOfMeasure();
     }
 }
