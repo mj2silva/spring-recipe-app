@@ -36,10 +36,13 @@ class UnitOfMeasureRepositoryIT {
 
     @Test
     void findByUom() {
-        Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureRepository.findByUom("Teaspoon").blockOptional();
-        UnitOfMeasure teaspoon = unitOfMeasure.orElse(null);
+        UnitOfMeasure kilo = new UnitOfMeasure();
+        kilo.setUom("kilo");
+        unitOfMeasureRepository.save(kilo).block();
+        Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureRepository.findByUom("kilo").blockOptional();
+        UnitOfMeasure foundedKilo = unitOfMeasure.orElse(null);
 
-        assertNotNull(teaspoon);
-        assertEquals("Teaspoon", teaspoon.getUom());
+        assertNotNull(foundedKilo);
+        assertEquals("kilo", foundedKilo.getUom());
     }
 }

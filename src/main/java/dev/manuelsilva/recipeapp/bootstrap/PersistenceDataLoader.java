@@ -26,7 +26,8 @@ public class PersistenceDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("Starting to load data");
-        if (recipeRepository.count().blockOptional().orElse(0L) == 0) {
+        Long count = recipeRepository.count().blockOptional().orElse(0L) ;
+        if (count == 0L) {
             loadData();
             log.info("Finish loading data");
         } else {
