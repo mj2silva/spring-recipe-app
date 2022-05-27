@@ -2,6 +2,7 @@ package dev.manuelsilva.recipeapp.controllers;
 
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.services.RecipeService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +12,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 @Controller
+@Log4j2
 @RequestMapping("/recipes")
 public class RecipeController {
     private final RecipeService recipeService;
@@ -52,12 +54,12 @@ public class RecipeController {
     }
 
     @PostMapping({"", "/"})
-    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "recipes/form";
-        }
-        Mono<RecipeCommand> savedCommand = recipeService.saveRecipeCommand(command);
-        return "redirect:/recipes/" + savedCommand.block().getId();
+    public Mono<String> saveOrUpdate(@Valid @ModelAttribute("recipe") Mono<RecipeCommand> command) {
+        return command
+                .flatMap(recipeService::saveRecipeCommand)
+                .map(recipe -> "redirect:/recipes/" + recipe.getId())
+                .doOnError(thr -> log.error(thr.getMessage()))
+                .onErrorResume(throwable -> Mono.just("recipes/form"));
     }
 
     @GetMapping("/{recipeId}/change-image")
