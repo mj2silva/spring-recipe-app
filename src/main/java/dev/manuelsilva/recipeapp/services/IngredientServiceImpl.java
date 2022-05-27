@@ -31,13 +31,17 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Mono<IngredientCommand> findById(String recipeId, String id) {
-        Mono<Recipe> recipeMono = recipeRepository.findById(recipeId);
+        Mono<Recipe> recipeMono = recipeRepository
+                .findById(recipeId)
+                .switchIfEmpty(Mono.error(new NotFoundException("Recipe not found")));
         return recipeMono.mapNotNull(recipe -> ingredientToIngredientCommand.convert(recipe.getIngredient(id)));
     }
 
     @Override
     public Mono<IngredientCommand> save(String recipeId, IngredientCommand ingredientCommand) {
-        Mono<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        Mono<Recipe> recipeOptional = recipeRepository
+                .findById(recipeId)
+                .switchIfEmpty(Mono.error(new NotFoundException("Recipe not found")));
         Ingredient detachedIngredient = ingredientCommandToIngredient.convert(ingredientCommand);
         if (detachedIngredient == null) return Mono.empty();
         return recipeOptional
@@ -60,7 +64,9 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Mono<Void> deleteById(String recipeId, String ingredientId) {
-        Mono<Recipe> recipeMono = recipeRepository.findById(recipeId);
+        Mono<Recipe> recipeMono = recipeRepository
+                .findById(recipeId)
+                .switchIfEmpty(Mono.error(new NotFoundException("Recipe not found")));
         return recipeMono
             .map(recipe -> {
                 List<Ingredient> ingredients = recipe.getIngredients();
