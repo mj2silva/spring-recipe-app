@@ -8,6 +8,7 @@ import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
 import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,19 +28,22 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientCommand findById(String recipeId, String id) {
+    public Mono<IngredientCommand> findById(String recipeId, String id) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId).blockOptional();
         if (recipeOptional.isEmpty()) throw new NotFoundException("Invalid recipe id");
         Recipe recipe = recipeOptional.get();
         Ingredient ingredient = recipe.getIngredients().stream().filter(ing -> Objects.equals(ing.getId(), id)).findFirst().orElse(null);
         if (ingredient == null) throw new NotFoundException("Invalid ingredient id");
         IngredientCommand ingredientCommand = ingredientToIngredientCommand.convert(ingredient);
-        if (ingredientCommand != null) ingredientCommand.setRecipeId(recipe.getId());
-        return ingredientCommand;
+        if (ingredientCommand != null) {
+            ingredientCommand.setRecipeId(recipe.getId());
+            return Mono.just(ingredientCommand);
+        }
+        return Mono.empty();
     }
 
     @Override
-    public IngredientCommand save(String recipeId, IngredientCommand ingredientCommand) {
+    public Mono<IngredientCommand> save(String recipeId, IngredientCommand ingredientCommand) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId).blockOptional();
         if (recipeOptional.isEmpty()) {
             throw new NotFoundException("Invalid recipe id");
@@ -61,15 +65,16 @@ public class IngredientServiceImpl implements IngredientService {
         recipeRepository.save(recipe).block();
         IngredientCommand savedIngredientCommand = ingredientToIngredientCommand.convert(detachedIngredient);
         if (savedIngredientCommand != null) savedIngredientCommand.setRecipeId(recipe.getId());
-        return savedIngredientCommand;
+        return Mono.just(savedIngredientCommand);
     }
 
     @Override
-    public void deleteById(String recipeId, String ingredientId) {
+    public Mono<Void> deleteById(String recipeId, String ingredientId) {
         Recipe recipe = recipeRepository.findById(recipeId).block();
         if (recipe == null) throw new NotFoundException("The recipe id is invalid");
         List<Ingredient> ingredients = recipe.getIngredients();
         ingredients.removeIf(ingredient -> Objects.equals(ingredient.getId(), ingredientId));
         recipeRepository.save(recipe).block();
+        return Mono.empty();
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -29,24 +31,21 @@ public class IngredientController {
 
     @GetMapping("/recipes/{recipeId}/ingredients")
     public String getIngredientsList(Model model, @PathVariable String recipeId) {
-        RecipeCommand command = recipeService.getRecipeCommandById(recipeId);
+        Mono<RecipeCommand> command = recipeService.getRecipeCommandById(recipeId);
         model.addAttribute("recipe", command);
         return "recipes/ingredients/list";
     }
     @GetMapping("/recipes/{recipeId}/ingredients/{ingredientId}")
     public String showIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
-        IngredientCommand ingredient = ingredientService.findById(recipeId, ingredientId);
-        if (!ingredient.getRecipeId().equals(recipeId)) {
-            return String.format("redirect:/recipes/%s/ingredients/%s", ingredient.getRecipeId(), ingredient.getId());
-        }
+        Mono<IngredientCommand> ingredient = ingredientService.findById(recipeId, ingredientId);
         model.addAttribute("ingredient", ingredient);
         return "recipes/ingredients/show";
     }
 
     @GetMapping("/recipes/{recipeId}/ingredients/{ingredientId}/edit")
     public String editIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
-        IngredientCommand ingredient = ingredientService.findById(recipeId, ingredientId);
-        List<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure().collectList().block();
+        Mono<IngredientCommand> ingredient = ingredientService.findById(recipeId, ingredientId);
+        Flux<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
         model.addAttribute("ingredient", ingredient);
         model.addAttribute("unitsOfMeasure", unitsOfMeasure);
         return "recipes/ingredients/edit";
@@ -54,11 +53,10 @@ public class IngredientController {
 
     @GetMapping("/recipes/{recipeId}/ingredients/new")
     public String createIngredient(Model model, @PathVariable String recipeId) {
-        RecipeCommand recipe = recipeService.getRecipeCommandById(recipeId);
+        Mono<RecipeCommand> recipe = recipeService.getRecipeCommandById(recipeId);
         if (recipe == null) return "redirect:/recipes";
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(recipeId);
-        ingredientCommand.setRecipeDescription(recipe.getDescription());
         List<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure().collectList().block();
         model.addAttribute("ingredient", ingredientCommand);
         model.addAttribute("unitsOfMeasure", unitsOfMeasure);
@@ -74,7 +72,7 @@ public class IngredientController {
 
     @PostMapping("/recipes/{recipeId}/ingredients")
     public String saveOrUpdateIngredient(@ModelAttribute IngredientCommand ingredientCommand, @PathVariable String recipeId) {
-        IngredientCommand savedIngredient = ingredientService.save(recipeId, ingredientCommand);
+        IngredientCommand savedIngredient = ingredientService.save(recipeId, ingredientCommand).block();
         return String.format("redirect:/recipes/%s/ingredients/%s", savedIngredient.getRecipeId(), savedIngredient.getId());
     }
 }

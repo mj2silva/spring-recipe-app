@@ -58,7 +58,7 @@ class IngredientServiceImplTest {
         recipe.addIngredient(ingredient_3);
         when(recipeRepository.findById(eq("1L"))).thenReturn(Mono.just(recipe));
 
-        IngredientCommand ingredientCommand_1 = ingredientService.findById("1L", "1L");
+        IngredientCommand ingredientCommand_1 = ingredientService.findById("1L", "1L").block();
         assertEquals("1L", ingredientCommand_1.getId());
         assertEquals("1L", ingredientCommand_1.getRecipeId());
     }
@@ -79,10 +79,10 @@ class IngredientServiceImplTest {
         when(recipeRepository.findById(eq(RECIPE_ID))).thenReturn(Mono.just(savedRecipe));
         when(recipeRepository.save(any(Recipe.class))).thenReturn(Mono.just(savedRecipe));
 
-        IngredientCommand savedCommand = ingredientService.save(RECIPE_ID, ingredientCommand);
+        Mono<IngredientCommand> savedCommand = ingredientService.save(RECIPE_ID, ingredientCommand);
 
-        assertEquals(INGREDIENT_ID, savedCommand.getId());
-        assertEquals(RECIPE_ID, savedCommand.getRecipeId());
+        assertEquals(INGREDIENT_ID, savedCommand.block().getId());
+        assertEquals(RECIPE_ID, savedCommand.block().getRecipeId());
         verify(recipeRepository, times(1)).findById(anyString());
     }
 

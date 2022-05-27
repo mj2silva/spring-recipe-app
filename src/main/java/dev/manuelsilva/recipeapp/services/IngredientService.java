@@ -1,11 +1,10 @@
 package dev.manuelsilva.recipeapp.services;
 
 import dev.manuelsilva.recipeapp.commands.IngredientCommand;
-import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
 public interface IngredientService {
-    IngredientCommand findById(String recipeId, String id);
-    @Transactional
-    IngredientCommand save(String recipeId, IngredientCommand ingredientCommand);
-    void deleteById(String recipeId, String ingredientId);
+    Mono<IngredientCommand> findById(String recipeId, String id);
+    Mono<IngredientCommand> save(String recipeId, IngredientCommand ingredientCommand);
+    Mono<Void> deleteById(String recipeId, String ingredientId);
 }

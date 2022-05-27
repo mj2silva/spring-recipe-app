@@ -1,32 +1,30 @@
 package dev.manuelsilva.recipeapp.services;
 
-import dev.manuelsilva.recipeapp.converters.RecipeCommandToRecipe;
-import dev.manuelsilva.recipeapp.converters.RecipeToRecipeCommand;
+import dev.manuelsilva.recipeapp.commands.RecipeCommand;
+import dev.manuelsilva.recipeapp.converters.*;
 import dev.manuelsilva.recipeapp.domain.Recipe;
-import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
 import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@Log4j2
 class RecipeServiceImplTest {
     static final String NEW_DESCRIPTION = "New description";
 
     RecipeServiceImpl recipeService;
     @Mock
     RecipeReactiveRepository recipeRepository;
-    @Mock
-    RecipeToRecipeCommand recipeToRecipeCommand;
-    @Mock
-    RecipeCommandToRecipe recipeCommandToRecipe;
+
+    RecipeToRecipeCommand recipeToRecipeCommand = new RecipeToRecipeCommand(new NotesToNotesCommand(), new CategoryToCategoryCommand(), new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand()));
+    RecipeCommandToRecipe recipeCommandToRecipe = new RecipeCommandToRecipe(new CategoryCommandToCategory(), new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure()), new NotesCommandToNotes());
 
     @BeforeEach
     void setUp() {
@@ -37,10 +35,21 @@ class RecipeServiceImplTest {
     @Test
     void getAllRecipes() {
         Recipe recipe = new Recipe();
-        when(recipeRepository.findAll()).thenReturn(Flux.just(recipe));
+        recipe.setId("1L");
+        recipe.setDescription("desc");
+        Recipe recipe2 = new Recipe();
+        recipe2.setId("2L");
+        recipe2.setDescription("desc 2");
+        Flux<Recipe> recipeFlux = Flux.just(recipe, recipe2);
+        when(recipeRepository.findAll()).thenReturn(recipeFlux);
+        Flux<RecipeCommand> recipes = recipeService.getAllRecipes();
 
-        List<Recipe> recipes = recipeService.getAllRecipes();
-        assertEquals(1, recipes.size());
+        StepVerifier.create(recipes)
+                .expectNextMatches(rc -> rc.getId().equals("1L"))
+                .expectNextMatches(rc -> rc.getId().equals("2L"))
+                .expectComplete()
+                .verify();
+
         verify(recipeRepository, times(1)).findAll();
     }
 
@@ -50,21 +59,22 @@ class RecipeServiceImplTest {
         recipe.setId("1L");
         when(recipeRepository.findById(anyString())).thenReturn(Mono.just(recipe));
 
-        Recipe foundedRecipe = recipeService.getRecipeById("1L");
-        assertNotNull(foundedRecipe, "Null recipe returned");
+        Mono<RecipeCommand> foundedRecipe = recipeService.getRecipeCommandById("1L");
+        StepVerifier.create(foundedRecipe)
+                .expectNextMatches(rc -> rc.getId().equals("1L"))
+                .expectComplete()
+                .verify();
         verify(recipeRepository).findById(anyString());
         verify(recipeRepository, never()).findAll();
     }
     @Test
     void testGetRecipeByIdNotFound() {
         when(recipeRepository.findById(anyString())).thenReturn(Mono.empty());
-        NotFoundException exception = assertThrows(
-                NotFoundException.class,
-                () -> recipeService.getRecipeCommandById("1L"),
-                "Expected to throw an error"
-        );
+        Mono<RecipeCommand> recipeCommandMono = recipeService.getRecipeCommandById("1L");
+        StepVerifier.create(recipeCommandMono)
+                .expectComplete()
+                .verify();
         verify(recipeRepository, times(1)).findById(anyString());
-        assertTrue(exception.getMessage().contains("Recipe not found"));
     }
     @Test
     void testDeleteById() {

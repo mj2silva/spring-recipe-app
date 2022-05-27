@@ -2,17 +2,13 @@ package dev.manuelsilva.recipeapp.controllers;
 
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.services.RecipeService;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 @Controller
 @RequestMapping("/recipes")
@@ -31,7 +27,7 @@ public class RecipeController {
 
     @GetMapping(value = {"/{recipeId}"})
     public String getRecipe(Model model, @PathVariable String recipeId) {
-        RecipeCommand recipe = recipeService.getRecipeCommandById(recipeId);
+        Mono<RecipeCommand> recipe = recipeService.getRecipeCommandById(recipeId);
         model.addAttribute("recipe", recipe);
         return "recipes/show";
     }
@@ -44,7 +40,7 @@ public class RecipeController {
 
     @GetMapping("/{recipeId}/update")
     public String editRecipe(Model model, @PathVariable String recipeId) {
-        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(recipeId);
+        Mono<RecipeCommand> recipeCommand = recipeService.getRecipeCommandById(recipeId);
         model.addAttribute("recipe", recipeCommand);
         return "recipes/form";
     }
@@ -60,18 +56,18 @@ public class RecipeController {
         if (bindingResult.hasErrors()) {
             return "recipes/form";
         }
-        RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
-        return "redirect:/recipes/" + savedCommand.getId();
+        Mono<RecipeCommand> savedCommand = recipeService.saveRecipeCommand(command);
+        return "redirect:/recipes/" + savedCommand.block().getId();
     }
 
     @GetMapping("/{recipeId}/change-image")
     public String changeImage(Model model, @PathVariable String recipeId) {
-        RecipeCommand recipe = recipeService.getRecipeCommandById(recipeId);
+        Mono<RecipeCommand> recipe = recipeService.getRecipeCommandById(recipeId);
         model.addAttribute("recipe", recipe);
         return "recipes/imageForm";
     }
 
-    @GetMapping("/{recipeId}/image")
+    /*@GetMapping("/{recipeId}/image")
     public void retrieveImage(@PathVariable String recipeId, HttpServletResponse response) throws IOException {
         RecipeCommand recipe = recipeService.getRecipeCommandById(recipeId);
         // TODO: Check if the recipe actually has an image
@@ -82,5 +78,5 @@ public class RecipeController {
         response.setContentType("image/jpeg");
         InputStream inputStream = new ByteArrayInputStream(bytesFromImage);
         IOUtils.copy(inputStream, response.getOutputStream());
-    }
+    }*/
 }

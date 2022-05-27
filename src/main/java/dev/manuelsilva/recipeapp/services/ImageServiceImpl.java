@@ -5,6 +5,7 @@ import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void saveImageFile(String id, MultipartFile file) {
+    public Mono<Void> saveImageFile(String id, MultipartFile file) {
         // TODO: Check if we can change Byte[] for byte[]
         try {
             Recipe recipe = recipeRepository.findById(id).block();
@@ -33,5 +34,6 @@ public class ImageServiceImpl implements ImageService {
             log.error("Some error occurred during file saving", ex);
             ex.printStackTrace();
         }
+        return Mono.empty();
     }
 }
