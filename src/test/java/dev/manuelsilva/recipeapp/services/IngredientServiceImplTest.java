@@ -18,6 +18,8 @@ import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,8 +33,6 @@ class IngredientServiceImplTest {
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
     @Mock
     RecipeReactiveRepository recipeRepository;
-    @Mock
-    IngredientRepository ingredientRepository;
     IngredientService ingredientService;
     IngredientCommandToIngredient ingredientCommandToIngredient;
 
@@ -44,7 +44,7 @@ class IngredientServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ingredientService = new IngredientServiceImpl(ingredientRepository, recipeRepository, ingredientToIngredientCommand, ingredientCommandToIngredient);
+        ingredientService = new IngredientServiceImpl(recipeRepository, ingredientToIngredientCommand, ingredientCommandToIngredient);
     }
 
     @Test
@@ -117,7 +117,14 @@ class IngredientServiceImplTest {
 
     @Test
     void deleteById() {
-        ingredientService.deleteById("1L");
-        verify(ingredientRepository, times(1)).deleteById(eq("1L"));
+        Recipe recipe = new Recipe();
+        recipe.setId("1L");
+        List<Ingredient> ingredientList = new ArrayList<>();
+        recipe.setIngredients(ingredientList);
+        when(recipeRepository.findById(eq("1L"))).thenReturn(Mono.just(recipe));
+        when(recipeRepository.save(any(Recipe.class))).thenReturn(Mono.just(recipe));
+        ingredientService.deleteById("1L", "1L");
+        verify(recipeRepository, times(1)).save(any(Recipe.class));
+        verify(recipeRepository, times(1)).findById(eq("1L"));
     }
 }

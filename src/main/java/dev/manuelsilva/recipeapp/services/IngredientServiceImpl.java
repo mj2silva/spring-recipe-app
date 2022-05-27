@@ -9,20 +9,19 @@ import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
 import dev.manuelsilva.recipeapp.repositories.IngredientRepository;
 import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
-    private final IngredientRepository ingredientRepository;
     private final RecipeReactiveRepository recipeRepository;
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
     private final IngredientCommandToIngredient ingredientCommandToIngredient;
 
-    public IngredientServiceImpl(IngredientRepository ingredientRepository, RecipeReactiveRepository recipeRepository, IngredientToIngredientCommand ingredientToIngredientCommand, IngredientCommandToIngredient ingredientCommandToIngredient) {
-        this.ingredientRepository = ingredientRepository;
+    public IngredientServiceImpl(RecipeReactiveRepository recipeRepository, IngredientToIngredientCommand ingredientToIngredientCommand, IngredientCommandToIngredient ingredientCommandToIngredient) {
         this.recipeRepository = recipeRepository;
         this.ingredientToIngredientCommand = ingredientToIngredientCommand;
         this.ingredientCommandToIngredient = ingredientCommandToIngredient;
@@ -49,6 +48,8 @@ public class IngredientServiceImpl implements IngredientService {
         Recipe recipe = recipeOptional.get();
         Ingredient detachedIngredient = ingredientCommandToIngredient.convert(ingredientCommand);
         if (detachedIngredient == null) return null;
+        String randomIngredientId = UUID.randomUUID().toString();
+        if (detachedIngredient.getId() == null || Objects.equals(detachedIngredient.getId(), "")) detachedIngredient.setId(randomIngredientId);
         recipe.addIngredient(detachedIngredient);
         recipeRepository.save(recipe).block();
         IngredientCommand savedIngredientCommand = ingredientToIngredientCommand.convert(detachedIngredient);
@@ -57,7 +58,11 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteById(String ingredientId) {
-        ingredientRepository.deleteById(ingredientId);
+    public void deleteById(String recipeId, String ingredientId) {
+        Recipe recipe = recipeRepository.findById(recipeId).block();
+        if (recipe == null) throw new NotFoundException("The recipe id is invalid");
+        List<Ingredient> ingredients = recipe.getIngredients();
+        ingredients.removeIf(ingredient -> Objects.equals(ingredient.getId(), ingredientId));
+        recipeRepository.save(recipe).block();
     }
 }

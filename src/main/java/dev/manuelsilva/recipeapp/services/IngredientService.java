@@ -7,5 +7,5 @@ public interface IngredientService {
     IngredientCommand findById(String recipeId, String id);
     @Transactional
     IngredientCommand save(String recipeId, IngredientCommand ingredientCommand);
-    void deleteById(String ingredientId);
+    void deleteById(String recipeId, String ingredientId);
 }

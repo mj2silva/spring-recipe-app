@@ -68,11 +68,8 @@ public class IngredientController {
 
     @GetMapping("/recipes/{recipeId}/ingredients/{ingredientId}/delete")
     public String deleteIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
-        IngredientCommand ingredient = ingredientService.findById(recipeId, ingredientId);
-        if (!ingredient.getRecipeId().equals(recipeId)) {
-            return String.format("redirect:/recipes/%s/ingredients", recipeId);
-        }
-        ingredientService.deleteById(ingredientId);
+        ingredientService.findById(recipeId, ingredientId); // In order to throw an exception in case it fails
+        ingredientService.deleteById(recipeId, ingredientId);
         return String.format("redirect:/recipes/%s/ingredients", recipeId);
     }
 
