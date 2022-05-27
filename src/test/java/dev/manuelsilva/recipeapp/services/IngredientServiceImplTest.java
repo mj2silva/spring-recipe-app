@@ -8,22 +8,17 @@ import dev.manuelsilva.recipeapp.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.domain.Ingredient;
 import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
-import dev.manuelsilva.recipeapp.repositories.IngredientRepository;
-import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
 import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 

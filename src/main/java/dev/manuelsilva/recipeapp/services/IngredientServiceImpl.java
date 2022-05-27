@@ -6,7 +6,6 @@ import dev.manuelsilva.recipeapp.converters.IngredientToIngredientCommand;
 import dev.manuelsilva.recipeapp.domain.Ingredient;
 import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
-import dev.manuelsilva.recipeapp.repositories.IngredientRepository;
 import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import org.springframework.stereotype.Service;
 
