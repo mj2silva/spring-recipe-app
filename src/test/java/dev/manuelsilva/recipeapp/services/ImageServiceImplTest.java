@@ -2,6 +2,7 @@ package dev.manuelsilva.recipeapp.services;
 
 import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -9,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.*;
 
 class ImageServiceImplTest {
     @Mock
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeRepository;
     ImageService imageService;
 
     @BeforeEach
@@ -37,8 +39,9 @@ class ImageServiceImplTest {
         );
         Recipe recipe = new Recipe();
         recipe.setId("1L");
-        Optional<Recipe> optionalRecipe = Optional.of(recipe);
-        when(recipeRepository.findById(eq("1L"))).thenReturn(optionalRecipe);
+        when(recipeRepository.findById(eq("1L"))).thenReturn(Mono.just(recipe));
+        when(recipeRepository.save(any(Recipe.class))).thenReturn(Mono.just(recipe));
+
         ArgumentCaptor<Recipe> recipeArgumentCaptor = ArgumentCaptor.forClass(Recipe.class);
         imageService.saveImageFile("1L", multipartFile);
 
