@@ -72,7 +72,7 @@ class RecipeServiceImplTest {
         when(recipeRepository.findById(anyString())).thenReturn(Mono.empty());
         Mono<RecipeCommand> recipeCommandMono = recipeService.getRecipeCommandById("1L");
         StepVerifier.create(recipeCommandMono)
-                .expectComplete()
+                .expectError()
                 .verify();
         verify(recipeRepository, times(1)).findById(anyString());
     }
