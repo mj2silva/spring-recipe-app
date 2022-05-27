@@ -2,6 +2,9 @@ package dev.manuelsilva.recipeapp.repositories;
 
 import dev.manuelsilva.recipeapp.bootstrap.PersistenceDataLoader;
 import dev.manuelsilva.recipeapp.domain.UnitOfMeasure;
+import dev.manuelsilva.recipeapp.repositories.reactive.CategoryReactiveRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,23 +22,21 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class UnitOfMeasureRepositoryIT {
 
     @Autowired
-    UnitOfMeasureRepository unitOfMeasureRepository;
+    UnitOfMeasureReactiveRepository unitOfMeasureRepository;
     @Autowired
-    CategoryRepository categoryRepository;
+    CategoryReactiveRepository categoryRepository;
     @Autowired
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeRepository;
 
     @BeforeEach
     void setUp() throws Exception {
-        if (recipeRepository.count() == 0) {
-            PersistenceDataLoader dataLoader = new PersistenceDataLoader(recipeRepository, categoryRepository, unitOfMeasureRepository);
-            dataLoader.run();
-        }
+        PersistenceDataLoader dataLoader = new PersistenceDataLoader(recipeRepository, categoryRepository, unitOfMeasureRepository);
+        dataLoader.run();
     }
 
     @Test
     void findByUom() {
-        Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureRepository.findByUom("Teaspoon");
+        Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureRepository.findByUom("Teaspoon").blockOptional();
         UnitOfMeasure teaspoon = unitOfMeasure.orElse(null);
 
         assertNotNull(teaspoon);

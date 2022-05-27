@@ -4,6 +4,9 @@ import dev.manuelsilva.recipeapp.domain.*;
 import dev.manuelsilva.recipeapp.repositories.CategoryRepository;
 import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
 import dev.manuelsilva.recipeapp.repositories.UnitOfMeasureRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.CategoryReactiveRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
+import dev.manuelsilva.recipeapp.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -16,11 +19,11 @@ import java.util.Optional;
 @Profile({"default","dev", "prod"})
 @Slf4j
 public class PersistenceDataLoader implements CommandLineRunner {
-    private final RecipeRepository recipeRepository;
-    private final CategoryRepository categoryRepository;
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final RecipeReactiveRepository recipeRepository;
+    private final CategoryReactiveRepository categoryRepository;
+    private final UnitOfMeasureReactiveRepository unitOfMeasureRepository;
 
-    public PersistenceDataLoader(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
+    public PersistenceDataLoader(RecipeReactiveRepository recipeRepository, CategoryReactiveRepository categoryRepository, UnitOfMeasureReactiveRepository unitOfMeasureRepository) {
         this.recipeRepository = recipeRepository;
         this.categoryRepository = categoryRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
@@ -30,7 +33,7 @@ public class PersistenceDataLoader implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         log.info("Starting to load data");
-        if (recipeRepository.count() == 0) {
+        if (recipeRepository.count().blockOptional().orElse(0L) == 0) {
             loadData();
             log.info("Finish loading data");
         } else {
@@ -109,7 +112,7 @@ public class PersistenceDataLoader implements CommandLineRunner {
         perfectGuacamole.addCategory(mexican);
         perfectGuacamole.addCategory(fastFood);
 
-        recipeRepository.save(perfectGuacamole);
+        recipeRepository.save(perfectGuacamole).block();
     }
 
     private void createSpicyChickenTacosRecipe(
@@ -164,26 +167,26 @@ public class PersistenceDataLoader implements CommandLineRunner {
         chickenTacos.addCategory(fastFood);
         chickenTacos.addCategory(american);
 
-        recipeRepository.save(chickenTacos);
+        recipeRepository.save(chickenTacos).block();
     }
 
     private UnitOfMeasure getUnitOfMeasureOrCreateIfNotExists(String uom) {
-        Optional<UnitOfMeasure> query = unitOfMeasureRepository.findByUom(uom);
+        Optional<UnitOfMeasure> query = unitOfMeasureRepository.findByUom(uom).blockOptional();
         if (query.isPresent()) {
             return query.get();
         }
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
         unitOfMeasure.setUom(uom);
-        return unitOfMeasureRepository.save(unitOfMeasure);
+        return unitOfMeasureRepository.save(unitOfMeasure).block();
     }
 
     private Category getCategoryOrCreateIfNotExists(String categoryName) {
-        Optional<Category> query = categoryRepository.findByDescription(categoryName);
+        Optional<Category> query = categoryRepository.findByDescription(categoryName).blockOptional();
         if (query.isPresent()) {
             return query.get();
         }
         Category category = new Category();
         category.setDescription(categoryName);
-        return categoryRepository.save(category);
+        return categoryRepository.save(category).block();
     }
 }
