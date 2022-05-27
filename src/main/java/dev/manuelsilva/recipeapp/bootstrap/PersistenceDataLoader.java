@@ -1,9 +1,6 @@
 package dev.manuelsilva.recipeapp.bootstrap;
 
 import dev.manuelsilva.recipeapp.domain.*;
-import dev.manuelsilva.recipeapp.repositories.CategoryRepository;
-import dev.manuelsilva.recipeapp.repositories.RecipeRepository;
-import dev.manuelsilva.recipeapp.repositories.UnitOfMeasureRepository;
 import dev.manuelsilva.recipeapp.repositories.reactive.CategoryReactiveRepository;
 import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
 import dev.manuelsilva.recipeapp.repositories.reactive.UnitOfMeasureReactiveRepository;
@@ -16,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Component
-@Profile({"default","dev", "prod"})
 @Slf4j
 public class PersistenceDataLoader implements CommandLineRunner {
     private final RecipeReactiveRepository recipeRepository;
@@ -30,7 +26,6 @@ public class PersistenceDataLoader implements CommandLineRunner {
     }
 
     @Override
-    @Transactional
     public void run(String... args) throws Exception {
         log.info("Starting to load data");
         if (recipeRepository.count().blockOptional().orElse(0L) == 0) {
