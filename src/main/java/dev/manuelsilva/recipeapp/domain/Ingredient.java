@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class Ingredient {
-    private String id = UUID.randomUUID().toString();
+    private String id;
     private String description;
     private BigDecimal amount;
     @DBRef

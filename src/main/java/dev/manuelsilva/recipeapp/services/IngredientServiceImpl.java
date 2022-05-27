@@ -7,6 +7,7 @@ import dev.manuelsilva.recipeapp.domain.Ingredient;
 import dev.manuelsilva.recipeapp.domain.Recipe;
 import dev.manuelsilva.recipeapp.exceptions.NotFoundException;
 import dev.manuelsilva.recipeapp.repositories.reactive.RecipeReactiveRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Log4j2
 public class IngredientServiceImpl implements IngredientService {
     private final RecipeReactiveRepository recipeRepository;
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
@@ -29,52 +31,44 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Mono<IngredientCommand> findById(String recipeId, String id) {
-        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId).blockOptional();
-        if (recipeOptional.isEmpty()) throw new NotFoundException("Invalid recipe id");
-        Recipe recipe = recipeOptional.get();
-        Ingredient ingredient = recipe.getIngredients().stream().filter(ing -> Objects.equals(ing.getId(), id)).findFirst().orElse(null);
-        if (ingredient == null) throw new NotFoundException("Invalid ingredient id");
-        IngredientCommand ingredientCommand = ingredientToIngredientCommand.convert(ingredient);
-        if (ingredientCommand != null) {
-            ingredientCommand.setRecipeId(recipe.getId());
-            return Mono.just(ingredientCommand);
-        }
-        return Mono.empty();
+        Mono<Recipe> recipeMono = recipeRepository.findById(recipeId);
+        return recipeMono.mapNotNull(recipe -> ingredientToIngredientCommand.convert(recipe.getIngredient(id)));
     }
 
     @Override
     public Mono<IngredientCommand> save(String recipeId, IngredientCommand ingredientCommand) {
-        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId).blockOptional();
-        if (recipeOptional.isEmpty()) {
-            throw new NotFoundException("Invalid recipe id");
-        }
-        Recipe recipe = recipeOptional.get();
+        Mono<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         Ingredient detachedIngredient = ingredientCommandToIngredient.convert(ingredientCommand);
-        if (detachedIngredient == null) return null;
-        if (detachedIngredient.getId() == null || Objects.equals(detachedIngredient.getId(), "")) {
-            String randomIngredientId = UUID.randomUUID().toString();
-            detachedIngredient.setId(randomIngredientId);
-            recipe.addIngredient(detachedIngredient);
-        }
-        else {
-            Ingredient recipeIngredient = recipe.getIngredient(detachedIngredient.getId());
-            recipeIngredient.setDescription(detachedIngredient.getDescription());
-            recipeIngredient.setAmount(detachedIngredient.getAmount());
-            recipeIngredient.setUnitOfMeasure(detachedIngredient.getUnitOfMeasure());
-        }
-        recipeRepository.save(recipe).block();
-        IngredientCommand savedIngredientCommand = ingredientToIngredientCommand.convert(detachedIngredient);
-        if (savedIngredientCommand != null) savedIngredientCommand.setRecipeId(recipe.getId());
-        return Mono.just(savedIngredientCommand);
+        if (detachedIngredient == null) return Mono.empty();
+        return recipeOptional
+                .map(recipe -> {
+                    if (detachedIngredient.getId() == null || Objects.equals(detachedIngredient.getId(), "")) {
+                        String randomIngredientId = UUID.randomUUID().toString();
+                        detachedIngredient.setId(randomIngredientId);
+                        recipe.addIngredient(detachedIngredient);
+                    } else {
+                        Ingredient recipeIngredient = recipe.getIngredient(detachedIngredient.getId());
+                        recipeIngredient.setDescription(detachedIngredient.getDescription());
+                        recipeIngredient.setAmount(detachedIngredient.getAmount());
+                        recipeIngredient.setUnitOfMeasure(detachedIngredient.getUnitOfMeasure());
+                    }
+                    return recipe;
+                })
+                .flatMap(recipeRepository::save)
+                .mapNotNull(savedRecipe -> ingredientToIngredientCommand.convert(savedRecipe.getIngredient(detachedIngredient.getId())));
     }
 
     @Override
     public Mono<Void> deleteById(String recipeId, String ingredientId) {
-        Recipe recipe = recipeRepository.findById(recipeId).block();
-        if (recipe == null) throw new NotFoundException("The recipe id is invalid");
-        List<Ingredient> ingredients = recipe.getIngredients();
-        ingredients.removeIf(ingredient -> Objects.equals(ingredient.getId(), ingredientId));
-        recipeRepository.save(recipe).block();
-        return Mono.empty();
+        Mono<Recipe> recipeMono = recipeRepository.findById(recipeId);
+        return recipeMono
+            .map(recipe -> {
+                List<Ingredient> ingredients = recipe.getIngredients();
+                ingredients.removeIf(ingredient -> Objects.equals(ingredient.getId(), ingredientId));
+                return recipe;
+            })
+            .flatMap(recipeRepository::save)
+            .doOnError(throwable -> log.error(throwable.getMessage()))
+            .then(Mono.empty());
     }
 }

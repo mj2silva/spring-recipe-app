@@ -6,6 +6,7 @@ import dev.manuelsilva.recipeapp.commands.UnitOfMeasureCommand;
 import dev.manuelsilva.recipeapp.services.IngredientService;
 import dev.manuelsilva.recipeapp.services.RecipeService;
 import dev.manuelsilva.recipeapp.services.UnitOfMeasureService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
+@Log4j2
 public class IngredientController {
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
@@ -57,22 +60,23 @@ public class IngredientController {
         if (recipe == null) return "redirect:/recipes";
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(recipeId);
-        List<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure().collectList().block();
+        Flux<UnitOfMeasureCommand> unitsOfMeasure = unitOfMeasureService.getAllUnitsOfMeasure();
         model.addAttribute("ingredient", ingredientCommand);
         model.addAttribute("unitsOfMeasure", unitsOfMeasure);
         return "recipes/ingredients/edit";
     }
 
     @GetMapping("/recipes/{recipeId}/ingredients/{ingredientId}/delete")
-    public String deleteIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
-        ingredientService.findById(recipeId, ingredientId); // In order to throw an exception in case it fails
-        ingredientService.deleteById(recipeId, ingredientId);
-        return String.format("redirect:/recipes/%s/ingredients", recipeId);
+    public Mono<String> deleteIngredient(Model model, @PathVariable String recipeId, @PathVariable String ingredientId) {
+        return ingredientService.deleteById(recipeId, ingredientId).thenReturn(String.format("redirect:/recipes/%s/ingredients", recipeId));
     }
 
     @PostMapping("/recipes/{recipeId}/ingredients")
-    public String saveOrUpdateIngredient(@ModelAttribute IngredientCommand ingredientCommand, @PathVariable String recipeId) {
-        IngredientCommand savedIngredient = ingredientService.save(recipeId, ingredientCommand).block();
-        return String.format("redirect:/recipes/%s/ingredients/%s", savedIngredient.getRecipeId(), savedIngredient.getId());
+    public Mono<String> saveOrUpdateIngredient(@Valid @ModelAttribute Mono<IngredientCommand> ingredientCommand, @PathVariable String recipeId) {
+        return ingredientCommand
+                .flatMap(command -> ingredientService.save(recipeId, command))
+                .map(savedCommand -> String.format("redirect:/recipes/%s/ingredients/%s", recipeId, savedCommand.getId()))
+                .doOnError(thr -> log.error(thr.getMessage()))
+                .onErrorResume(throwable -> Mono.just(String.format("redirect:/recipes/%s/ingredients/new", recipeId)));
     }
 }
