@@ -33,12 +33,10 @@ public class RecipeServiceIT {
         Iterable<Recipe> recipes = recipeRepository.findAll().toIterable();
         Recipe testRecipe = recipes.iterator().next();
         RecipeCommand testRecipeCommand = recipeToRecipeCommand.convert(testRecipe);
-
         assertNotNull(testRecipeCommand);
-        System.out.println("Founded recipe ID: " + testRecipeCommand.getId());
         testRecipeCommand.setDescription(NEW_DESCRIPTION);
         RecipeCommand savedRecipeCommand = recipeService.saveRecipeCommand(testRecipeCommand).block();
-
+        assertNotNull(savedRecipeCommand);
         assertEquals(NEW_DESCRIPTION, savedRecipeCommand.getDescription());
         assertEquals(testRecipe.getId(), savedRecipeCommand.getId());
         assertEquals(testRecipe.getCategories().size(), savedRecipeCommand.getCategories().size());

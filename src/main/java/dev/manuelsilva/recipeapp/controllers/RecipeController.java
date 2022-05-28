@@ -3,13 +3,27 @@ package dev.manuelsilva.recipeapp.controllers;
 import dev.manuelsilva.recipeapp.commands.RecipeCommand;
 import dev.manuelsilva.recipeapp.services.RecipeService;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.compress.utils.IOUtils;
+import org.springframework.core.io.buffer.DefaultDataBuffer;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.awt.image.DataBuffer;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 @Controller
 @Log4j2
@@ -69,16 +83,19 @@ public class RecipeController {
         return "recipes/imageForm";
     }
 
-    /*@GetMapping("/{recipeId}/image")
-    public void retrieveImage(@PathVariable String recipeId, HttpServletResponse response) throws IOException {
-        RecipeCommand recipe = recipeService.getRecipeCommandById(recipeId);
+    @GetMapping(value = "/{recipeId}/image", produces = {MediaType.IMAGE_JPEG_VALUE})
+    public Mono<Void> retrieveImage(@PathVariable String recipeId, ServerWebExchange exchange) {
+        Mono<RecipeCommand> recipeCommandMono = recipeService.getRecipeCommandById(recipeId);
         // TODO: Check if the recipe actually has an image
-        byte[] bytesFromImage = new byte[recipe.getImage().length];
-        for (int i = 0; i < recipe.getImage().length; i++) {
-            bytesFromImage[i] = recipe.getImage()[i];
-        }
-        response.setContentType("image/jpeg");
-        InputStream inputStream = new ByteArrayInputStream(bytesFromImage);
-        IOUtils.copy(inputStream, response.getOutputStream());
-    }*/
+        return recipeCommandMono.flatMap(recipe -> {
+            byte[] bytesFromImage = new byte[recipe.getImage().length];
+            for (int i = 0; i < recipe.getImage().length; i++) {
+                bytesFromImage[i] = recipe.getImage()[i];
+            }
+            // InputStream inputStream = new ByteArrayInputStream(bytesFromImage);
+            DefaultDataBuffer dataBuffer = new DefaultDataBufferFactory().wrap(bytesFromImage);
+            return Mono.just(dataBuffer);
+        }).flatMap(stream -> exchange.getResponse().writeWith(Mono.just(stream)));
+
+    }
 }

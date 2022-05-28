@@ -80,7 +80,10 @@ class RecipeServiceImplTest {
     void testDeleteById() {
         String idToDelete = "2L";
         when(recipeRepository.deleteById(eq(idToDelete))).thenReturn(Mono.empty());
-        recipeService.deleteById(idToDelete);
+        Mono<Void> voidMono = recipeService.deleteById(idToDelete);
+        StepVerifier.create(voidMono)
+                            .expectComplete()
+                            .verify();
         verify(recipeRepository, times(1)).deleteById(eq(idToDelete));
     }
 }

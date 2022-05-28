@@ -20,7 +20,7 @@
                         <h3>Name:</h3>
                         <p style="white-space: pre-line" th:text="${ingredient.description}"></p>
                         <h3>Unit of measure:</h3>
-                        <p style="white-space: pre-line" th:text="${ingredient.unitOfMeasure.uom}"></p>
+                        <p style="white-space: pre-line" th:if="(${ingredient.unitOfMeasure} != null)" th:text="${ingredient.unitOfMeasure.uom}"></p>
                         <h3>Amount:</h3>
                         <p style="white-space: pre-line" th:text="${ingredient.amount}"></p>
                     </div>

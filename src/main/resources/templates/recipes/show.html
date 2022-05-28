@@ -112,7 +112,7 @@
                 <div class="col card">
                     <div class="card-body">
                         <h3 th:text="#{recipe.notes}">Notes:</h3>
-                        <p style="white-space: pre-line" th:if="(${recipe.notesCommand.recipeNotes} != null)" th:text="${recipe.notesCommand.recipeNotes}"></p>
+                        <p style="white-space: pre-line" th:if="(${recipe.notesCommand} != null)" th:text="${recipe.notesCommand.recipeNotes}"></p>
                     </div>
                 </div>
             </div>

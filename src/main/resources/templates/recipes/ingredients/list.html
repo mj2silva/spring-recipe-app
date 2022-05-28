@@ -51,7 +51,7 @@
                                             th:text="${ingredient.description}">(description)</a>
                                     </td>
                                     <td th:text="${ingredient.amount}">(amount)</td>
-                                    <td th:text="${ingredient.unitOfMeasure.uom}">(unit of measure)</td>
+                                    <td><span th:if="(${ingredient.unitOfMeasure} != null)" th:text="${ingredient.unitOfMeasure.uom}">(unit of measure)</span></td>
                                     <td><a class="link-secondary" th:href="'/recipes/' + ${recipe.id} + '/ingredients/' + ${ingredient.id} + '/edit'" th:text="Edit">(edit link)</a></td>
                                     <td><a class="link-danger" th:href="'/recipes/' + ${recipe.id} + '/ingredients/' + ${ingredient.id} + '/delete'" th:text="Delete">(delete link)</a></td>
                                 </tr>
